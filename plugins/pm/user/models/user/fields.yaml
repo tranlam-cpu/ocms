@@ -1,0 +1,17 @@
+fields:
+    username:
+        label: username
+        span: auto
+        type: text
+    password:
+        label: password
+        span: auto
+        type: text
+    name:
+        label: name
+        span: auto
+        type: text
+    permission:
+        label: permission
+        span: auto
+        type: number

@@ -1,0 +1,118 @@
+{% set shopseller = __SELF__.shopseller %}
+
+<!-- 
+{{ form_open({files: true, request: 'onUpdate'}) }}
+
+<div class="wrapper fadeInUp">
+    <div id="formContent">
+        <input type="hidden" name="_handler" value="onUpdate">
+        {{form_token()}}
+        {{form_sessionKey()}}
+
+        <h2 class="active"> Cập Nhật Shop </h2>
+        <table>
+            <tr>
+                <th><label> Ten Shop </label></th>
+                <th><input class="fadeIn second" name="shopname" type="text" id="registerName"
+                        placeholder="Enter your Shop name" value='{{shopseller.shopname}}' /></th>
+            </tr>
+            <tr>
+                <td><label> Phone </label></td>
+                <td><input class="fadeIn second" name="shopphone" type="text" id="registerName"
+                        placeholder="Enter your Shop phone" value='{{shopseller.phone}}' /></td>
+            </tr>
+            <tr>
+                <td><label> Email </label></td>
+                <td><input class="fadeIn second" name="shopemail" type="text" id="registerName"
+                        placeholder="Enter your Shop email" value='{{shopseller.email}}' /></td>
+            </tr>
+            <tr>
+                <td><label> Address </label></td>
+                <td><input class="fadeIn second" name="shopaddress" type="text" id="registerName"
+                        placeholder="Enter your Shop address" value='{{shopseller.address}}' /></td>
+            </tr>
+            <tr>
+                <td><label> Mo ta </label></td>
+                <td><input class="fadeIn second" name="shopdescription" type="text" id="registerName"
+                        placeholder="Enter your Shop description" value='{{shopseller.description}}' /></td>
+            </tr>
+
+            <tr>
+                <td><label> Avatar </label></td>
+                <td><img src='{{ shopseller.image.path }}'
+                        style="border-bottom-left-radius: 20%; max-width: 170px; max-height: 200px;"></td>
+            </tr>
+            <tr>
+                <td><label for="anh"><i class="btn btn-primary">Thay đổi ảnh đại diện</i></label></td>
+                <td><input type="file" style="display: none;" id="anh" name="gallery" accept=".jpg, .jpeg, .png" /></td>
+                <td><input type="submit" class="fadeIn third" value="Update"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+{{ form_close() }} -->
+
+
+{{ form_open({files: true, request: 'onUpdate'}) }}
+{{form_token()}}
+{{form_sessionKey()}}
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label><strong>Shop Name</strong></label>
+            <input name="shopname" type="text" class="form-control" placeholder="Enter your Shop name"
+                value='{{shopseller.shopname}}'>
+        </div>
+        <div class="form-group">
+            <label><strong>Phone</strong></label>
+            <input name="shopphone" type="text" class="form-control" placeholder="Enter your Shop phone"
+                value='{{shopseller.phone}}'>
+        </div>
+        <div class="form-group">
+            <label><strong>Email</strong></label>
+            <input name="shopemail" type="text" class="form-control" placeholder="Enter your Shop Email"
+                value='{{shopseller.email}}'>
+        </div>
+        <div class="form-group">
+            <label><strong>Address</strong></label>
+            <input name="shopaddress" type="text" class="form-control" placeholder="Enter your Shop Address"
+                value='{{shopseller.address}}'>
+        </div>
+        <!-- <div class="form-group">
+                <label for="exampleFormControlSelect1">Example select</label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div> -->
+        <!-- <div class="form-group">
+                <label for="exampleFormControlSelect2">Example multiple select</label>
+                <select multiple class="form-control" id="exampleFormControlSelect2">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div> -->
+        <div class="form-group">
+            <label><strong>Description</strong></label>
+            <textarea name="shopdescription" class="form-control" rows="3">{{shopseller.description}}</textarea>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <img src='{{ shopseller.image.path }}' style=" max-width: 400px; min-height: 200px;">
+        </div>
+        <div class="form-group">
+            <label for="anh"><i class="btn btn-secondary">Thay đổi ảnh đại diện</i></label></td>
+            <input type="file" style="display: none;" id="anh" name="gallery" accept=".jpg, .jpeg, .png" /></td>
+            <input class="btn btn-primary" type="submit" class="fadeIn third" value="Cập Nhật"></td>
+        </div>
+    </div>
+</div>
+{{ form_close() }}

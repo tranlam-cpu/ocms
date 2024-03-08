@@ -1,0 +1,233 @@
+.view-home-1, .view-home-2{
+	border: 1px solid white;
+	border-radius: 14px;
+	background: #FAFBFB;
+	margin-bottom: 1em;
+}
+
+.view-home-1-title{
+	font: 16px tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+	font-weight: bolder;
+	color: black;
+}
+.view-home-1-content{
+	height: 80%;
+	overflow: hidden;
+	
+}
+.view-home-1-content:hover{
+	border-radius: 0 0 14px 14px;
+	height: 105%;
+	background: white;
+	overflow-y: auto;
+}
+.view-home-1-content ul li:hover {
+	background: #FFF2F2;
+	cursor: pointer;
+}
+.view-home-1-content ul li:hover .view-home-nose{
+	color: orange !important;
+}
+.view-home-1-midcontent-show{
+	visibility: visible !important;
+	/*overflow-y: auto;*/
+}
+
+.view-home-1-content::-webkit-scrollbar, .view-home-1-midcontent-show::-webkit-scrollbar {
+    display: none;
+}
+.view-home-1-midcontent{
+	z-index: 20;
+	visibility: none;
+	right: 0;
+	top: 0;
+	visibility: hidden;
+	overflow: hidden;
+	height: 117%;
+	background: white;
+	border-radius: 14px;
+	border: 3px solid orange;
+}
+.view-home-nose{
+	float: right;
+}
+.end{
+	bottom: 0;
+	left: 1.5em;
+	padding-left: 2em;
+	padding-right: 2em;
+	border: 1px solid gray;
+	font: 12px/1.5 sans-serif;
+	opacity: 0.5;
+}
+.hidden{
+	visibility: hidden;
+}
+.grid-content-1, .grid-content-2{
+	margin: 1em;
+	background: #F4F4F4;
+	border-radius: 14px;
+	height: 170px;
+}
+.grid-content-3{
+	height: 170px;
+	max-height: auto;
+	background: #F4F4F4;
+	border-radius: 14px;
+	margin: 0 1em 1em 1em;
+}
+.grid-title{
+	margin-bottom: 4px;
+	margin-top: 4px;
+	color: grey;
+}
+.grid-title span{
+	color: white;
+	width: 10%;
+	z-index: 10;
+	padding: 1px 5px 1px 5px;
+	background: -webkit-linear-gradient(90deg,#ff9000,#ff5000);
+  	background: linear-gradient(90deg,#ff9000,#ff5000);
+	border-radius: 10px 0 10px 10px;	
+	opacity: 1;
+}
+.grid-content{
+	margin-bottom: 5px;
+}
+.grid-image img{
+	padding-top: 6px;
+	padding-bottom: 6px;
+	width: 100%;
+	height: 100%;
+	border-radius: 10px;
+	filter:brightness(65%);
+	object-fit: cover;
+}
+.grid-image img:hover{
+	cursor: pointer;
+	filter:brightness(100%);
+}
+.category-nav a{
+	font: 14px/1.5 sans-serif;
+	color: gray;
+}
+.category-nav a:hover{
+	text-decoration: none;
+}
+.category-details{
+	border-right: 1px solid gainsboro;
+	width: 55%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 1em 1.5em 1em 1em;
+}
+.category-product{
+	width: 45%;
+	padding: 1em;
+}
+.category-tag span{
+	margin-right: 0.4em;
+}
+.category-details h5,.category-product h5{
+	margin-bottom: 0;
+	font-family :sans-serif;
+}
+.category-product h5{
+	margin-bottom: 0.5em;
+}
+.category-product-image{
+	display: grid;
+	grid-template-columns: auto auto;
+	text-align: center;
+}
+.view-home-1-sub-title{
+	color: orange;
+}
+
+.view-home-2-image{
+    position: relative;
+}
+.image-2{
+	position: absolute;
+	border-radius: 100%;
+	top: 10%;
+	left: 40%;
+}
+.view-home-2-text{
+	font: 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+	position: absolute;
+	left: 35%;
+	top: 45%;
+}
+.category-product-image a:hover{
+	text-decoration: none;
+}
+.category-details h5 a{
+	color: black;
+}
+.category-details h5 a:hover{
+	text-decoration: none;
+}
+.category-tag a:hover{
+	text-decoration: none;
+}
+
+.rax-view{
+	position: fixed;
+	z-index: 1000;
+	right: 70px;
+	top: 200px;
+	background: #FAFBFB;
+  	border-radius: 14px;
+}
+.rax-view > img{
+	position: absolute;
+	z-index: -1;
+	transform: translate(4px,-30px);
+	width: 50px;
+}
+.rax-view > div > a{
+	padding: 1.5em;
+	color: black;
+
+}
+.rax-view > div > a:first-child{
+	background: linear-gradient(120deg,#ff9000,#ff5000);
+	border-radius: 14px 14px 0 0;
+	color: white;
+}
+.rax-view > div > a:hover{
+	text-decoration: none;
+	color: black;
+	background: linear-gradient(120deg,#ff9000,#ff5000);
+}
+.rax-view > div > a:last-child{
+	border-radius: 0 0 14px 14px;
+}
+.rax-banned{
+	background: #FF5000;
+	height: 80px;
+}
+.rax-banned > img{
+	object-fit: cover;
+	object-position: 5px -206px;
+}
+
+.view-home-rax-banned{
+	width: 100%;
+	margin-left: -15px;
+}
+.view-home-rax-banned > img{
+	border-radius: 14px;
+	object-fit: cover;
+	object-position: 10px -300px;
+}
+.product-title{
+	color: white;
+	margin-left: -15px;
+	padding: 0.5em;
+	background: linear-gradient(120deg,#ff9000,#ff5000);
+  	border-radius: 50px 14px 0 0;
+	width: 260px;
+	transform: translateY(20px);
+}

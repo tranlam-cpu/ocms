@@ -1,0 +1,13 @@
+columns:
+    name:
+        label: name
+        type: text
+    username:
+        label: name
+        type: text
+    password:
+        label: password
+        type: text
+    permission:
+        label: permission
+        type: number

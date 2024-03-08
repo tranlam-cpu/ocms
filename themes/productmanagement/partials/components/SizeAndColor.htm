@@ -1,0 +1,73 @@
+==
+<?php
+    use Pm\Product\Models\OptionColorRelation;
+    use Pm\Product\Models\OptionSizeRelation;
+    use Pm\Product\Models\ProductOption;
+
+
+    function onStart()
+    {
+        
+            $this['quantity']=ProductOption::query()
+            ->join('pm_product_','pm_product_option.product_name_id','=','pm_product_.id')
+            ->where('pm_product_.id','=',$this['id'])
+            ->get();
+
+
+            $this['color']= OptionColorRelation::query()
+            ->join('pm_product_option','pm_product_option_color.product_option_id','pm_product_option.id')
+            ->join('pm_product_','pm_product_option.product_name_id','=','pm_product_.id')
+            ->join('pm_product_color','pm_product_option_color.color_id','pm_product_color.id')
+            ->select('pm_product_color.name as color')
+            ->where('pm_product_.id','=',$this['id'])
+            ->get();
+
+
+            $this['size']= OptionSizeRelation::query()
+            ->join('pm_product_option','pm_product_option_size.product_option_id','pm_product_option.id')
+            ->join('pm_product_','pm_product_option.product_name_id','=','pm_product_.id')
+            ->join('pm_product_size','pm_product_option_size.size_id','pm_product_size.id')
+            ->select('pm_product_size.name as size')
+            ->where('pm_product_.id','=',$this['id'])
+            ->get();
+
+
+            
+        
+    }   
+?>
+==
+{% if quantity[0] %}
+    <div class="d-flex flex-row op-color">
+
+
+    {% if color[0] %}
+        {% for value in color %}
+            <span class="color mr-3 pt-2 pb-2 pl-4 pr-4"> {{value.color}} </span>
+        {% endfor %}
+   
+    {% endif %}
+    </div>
+    <div class="d-flex flex-row op-color">
+    {% if size[0] %}
+        {% for value in size %}
+            <span class="size mr-3 pt-2 pb-2 pl-4 pr-4"> {{value.size}} </span>
+        {% endfor %}
+
+    {% endif %}
+    </div>
+    <input type="hidden" name="quantity" value="{{quantity[0].quantity}}">
+{% else %}
+    <div class="d-flex flex-row op-color">
+
+    {% for value in color %}
+        <span class="color mr-3 pt-2 pb-2 pl-4 pr-4"> {{value.color}} </span>
+    {% endfor %}
+    </div>
+    <div class="d-flex flex-row op-color">
+    {% for value in size %}
+        <span class="size mr-3 pt-2 pb-2 pl-4 pr-4"> {{value.size}} </span>
+    {% endfor %}
+    </div>
+    <input type="hidden" name="quantity" value="0">
+{% endif %}

@@ -1,0 +1,30 @@
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <h2 class="active"> Sign In </h2>
+        <!-- Icon
+        <div class="fadeIn second">
+            <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
+        </div> -->
+
+        <!-- Login Form -->
+
+        <form data-request="onSend" id="form" method="post">
+            <input class="fadeIn second" name="username" type="text" id="userSigninLogin"
+                placeholder="Enter your Username" />
+            <input class="fadeIn second" name="password" type="text" id="userSigninPassword"
+                placeholder="Enter your password" />
+            <!-- <button type="submit">Log In</button> -->
+            <input type="submit" class="fadeIn fourth" value="Log In">
+        </form>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <form data-request="onSendLogOut" id="form" method="post">
+                <input type="submit" class="fadeIn fourth" value="Log Out">
+            </form>
+            <a class="underlineHover" href="/restore">Forgot Password?</a>
+        </div>
+    </div>
+</div>

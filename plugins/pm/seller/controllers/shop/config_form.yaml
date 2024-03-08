@@ -1,0 +1,10 @@
+name: Shop
+form: $/pm/seller/models/shop/fields.yaml
+modelClass: Pm\Seller\Models\Shop
+defaultRedirect: pm/seller/shop
+create:
+    redirect: 'pm/seller/shop/update/:id'
+    redirectClose: pm/seller/shop
+update:
+    redirect: pm/seller/shop
+    redirectClose: pm/seller/shop

@@ -1,0 +1,19 @@
+fields:
+    title:
+        label: Title
+        span: full
+        type: text
+    url:
+        label: Url
+        span: full
+        type: text
+    ParentName:
+        label: 'Parent Menu'
+        nameFrom: title
+        descriptionFrom: description
+        span: auto
+        type: relation
+    active:
+        label: Active
+        span: left
+        type: checkbox

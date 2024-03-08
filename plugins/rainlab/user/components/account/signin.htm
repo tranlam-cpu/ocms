@@ -1,0 +1,54 @@
+{{ form_ajax('onSignin') }}
+<div class="wrapper fadeInDown">
+
+        <!-- {% for error in errors.all() %}
+             <div class="alert alert-danger">{{error}}</div>
+        {% endfor %} -->
+      <!--   {% flash %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : type }}">{{ message }}</div>
+        {% endflash %} -->
+
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <!-- <h2 class="active"> Sign In </h2> -->
+        <!-- Icon
+        <div class="fadeIn second">
+            <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
+        </div> -->
+
+        <!-- Login Form -->
+        
+        <form id="form" onsubmit="return checkpass()">
+            <h1>Đăng Nhập</h1>
+            <div id="resultsSignin"></div>
+            <input class="fadeIn second" name="login" type="text" id="userSigninLogin"
+                placeholder="Nhập {{ loginAttributeLabel|lower }} của bạn" />
+            <input class="fadeIn second" name="password" type="password" id="userSigninPassword"
+                placeholder="Nhập mật khẩu" />
+            <button type="submit">Đăng nhập</button>
+            {% if rememberLoginMode == 'ask' %}
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input name="remember" type="checkbox" value="1">Stay logged in</label>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" href="/restore">Quên mật khẩu?</a>
+        </div>
+    </div>
+</div>
+{{ form_close() }}
+
+{% put scripts %}
+<script type="text/javascript">
+
+    function checkpass(){
+        alert(2);
+        return false;
+    }
+</script>
+{% endput %}

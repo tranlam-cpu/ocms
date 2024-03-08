@@ -1,0 +1,91 @@
+{% set tongtien = 0 %}
+
+<div class="m_-7701890373452606468section">
+    <div class="m_-7701890373452606468section-header m_-7701890373452606468section-header--deliveredTo">Đơn hàng được
+        giao đến</div>
+    <div class="m_-7701890373452606468section-content">
+
+        <table cellpadding="2" cellspacing="0" width="100%">
+            <tbody>
+                <tr>
+                    <td width="25%" valign="top" style="color:#0f146d;font-weight:bold">Tên:</td>
+                    <td width="75%" valign="top">{{orders.name}}</td>
+                </tr>
+                <tr>
+                    <td valign="top" style="color:#0f146d;font-weight:bold">Địa chỉ nhà:</td>
+                    <td valign="top">{{orders.address}} - </td>
+                </tr>
+                <tr>
+                    <td valign="top" style="color:#0f146d;font-weight:bold">Điện thoại:</td>
+                    <td valign="top">{{orders.phone}}</td>
+                </tr>
+                <tr>
+                    <td valign="top" style="color:#0f146d;font-weight:bold">Email:</td>
+                    <td valign="top"><a href="mailto:{{orders[0].email}}" target="_blank">{{orders.email}}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>
+        *Một vài lưu ý nhỏ dành riêng bạn: Đối với thông tin về (những) sản phẩm còn lại (nếu có), Hệ thống sẽ cập nhật
+        với bạn qua email sau nha!
+
+    </p>
+</div>
+
+<div class="m_-7701890373452606468section" style="padding-bottom:0px">
+
+    <div class="m_-7701890373452606468section-content">
+
+
+        <div class="m_-7701890373452606468section-header m_-7701890373452606468section-header--yourPackage">Kiện Hàng #1
+        </div>
+        <p style="padding-left:10px;margin-top:0px;margin-bottom:0px;color:#585858">
+            Được bán bởi: {{ seller.shopname }}
+
+            <br>
+            Mã đơn hàng: {{orders.id}}
+        </p>
+        <div class="m_-7701890373452606468product" style="border-bottom:0px none">
+            <table cellpadding="0" cellspacing="0" style="width:100%">
+                <tbody>
+                    {% for details in order_details %}
+                    <tr>
+                        <td style="width:40%">
+                            <div style="padding-right:10px">
+
+                                {% for product in products %}
+                                {% if product.id == details.id_product %}
+                                <a href="{{product.image.path}}"
+                                    target="_blank">
+                                    <img src="{{product.image.path}}" style="width:100%;max-width:160px" class="CToWUd"
+                                        data-bit="iit">
+                                </a>
+                                {% endif %}
+                                {% endfor %}
+
+                            </div>
+                        </td>
+                        <td style="width:60%">
+                            <div class="m_-7701890373452606468product-productInfo-name">
+                                <a href="https://www.lazada.vn/products/i442796142-s797834097.html?urlFlag=true&amp;mp=1?"
+                                    target="_blank"
+                                    data-saferedirecturl="https://www.google.com/url?q=https://www.lazada.vn/products/i442796142-s797834097.html?urlFlag%3Dtrue%26mp%3D1?&amp;source=gmail&amp;ust=1677803429845000&amp;usg=AOvVaw3Qaj_dPgWe54sI1tsbnF0T"><span
+                                        style="font-size:14px">
+                                        {{ details.product_name }}</span></a>
+                            </div>
+                            <div class="m_-7701890373452606468product-productInfo-price"><span
+                                    style="font-size:14px">Giá: {{ details.money }} $</span></div>
+                            <div class="m_-7701890373452606468product-productInfo-subInfo"><span
+                                    style="font-size:14px">Quantity: {{ details.quantity }}</span></div>
+                                    {% set tongtien = tongtien + details.money %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <div class="m_-7701890373452606468product-productInfo-subInfo"><span
+                        style="font-size:14px">Tổng tiền: {{ tongtien }}</span></div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

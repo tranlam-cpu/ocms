@@ -1,0 +1,4 @@
+title: Products
+modelClass: Pm\Product\Models\Product
+toolbar:
+    buttons: reorder_toolbar

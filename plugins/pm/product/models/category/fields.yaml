@@ -1,0 +1,28 @@
+fields:
+    name:
+        label: Name
+        span: full
+        type: text
+    description:
+        label: Description
+        size: ''
+        span: full
+        type: textarea
+    slug:
+        label: Slug
+        span: auto
+        preset:
+            field: name
+            type: slug
+        type: text
+    gallery:
+        label: 'Gallery Image'
+        mode: image
+        imageWidth: '60'
+        imageHeight: '60'
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: full
+        type: fileupload

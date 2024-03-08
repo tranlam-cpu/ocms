@@ -1,0 +1,10 @@
+name: Categorys
+form: $/pm/product/models/category/fields.yaml
+modelClass: Pm\Product\Models\Category
+defaultRedirect: pm/product/categorys
+create:
+    redirect: 'pm/product/categorys/update/:id'
+    redirectClose: pm/product/categorys
+update:
+    redirect: pm/product/categorys
+    redirectClose: pm/product/categorys

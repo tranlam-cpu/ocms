@@ -1,0 +1,16 @@
+columns:
+    shopname:
+        label: shopname
+        type: text
+    address:
+        label: address
+        type: text
+    phone:
+        label: phone
+        type: text
+    email:
+        label: email
+        type: text
+    active:
+        label: active
+        type: switch

@@ -1,0 +1,93 @@
+
+.header-cart{
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	background: white;
+	font-family: 'Roboto';
+}
+
+.slider{
+  height: 25px;
+  padding-left:15px;
+  overflow: hidden;
+  margin-top: 1.1em;
+  border-radius: 20px 20px 10px 10px;
+}
+.slider div {
+  color:#fff;
+  height: 50px;
+  margin-bottom: 50px;
+  padding: 2px 15px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.slider-text1 {
+  background: lightgreen;
+  animation: slide 5s linear infinite;
+}
+.slider-text2 {
+  background: skyblue;
+}
+.slider-text3 {
+  background: lightcoral;
+}
+@keyframes slide {
+  0% {margin-top:-300px;}
+  5% {margin-top:-200px;}
+  33% {margin-top:-200px;}
+  38% {margin-top:-100px;}
+  66% {margin-top:-100px;}
+  71% {margin-top:0px;}
+  100% {margin-top:0px;}
+}
+
+
+.cart-title{
+	margin: 0 auto;
+	background: white;
+	font-family: 'Roboto';
+	padding: 1em;
+}
+.cart-title > div > div{
+	margin-left: 1em;
+}
+.cart-title > div:nth-child(2) > div{
+	margin-right: 6em;
+}
+.cart-title:nth-child(1) > div{
+	font-weight: bold;
+}
+.number{
+	width: 120px;
+}
+.trash-cart a{
+  cursor: pointer;
+}
+.trash-cart a:hover .fa-trash{
+  color: red;
+}
+.cart-bottom{
+  position: fixed;
+  bottom: 0;
+  width: 80%;
+  border: 1px solid gray;
+  animation: all 0.5s;
+  margin-bottom: 0 !important;
+}
+
+.cart-view-product{
+  background: white;
+}
+.list-cart{
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  text-align: center;
+}
+.list-cart div{
+  margin: 0.5em;
+}
+.list-cart div a:hover{
+  text-decoration: none;
+}

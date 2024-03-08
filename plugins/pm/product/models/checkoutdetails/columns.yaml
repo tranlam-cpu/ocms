@@ -1,0 +1,25 @@
+columns:
+    id_checkout:
+        label: 'Mã đơn hàng'
+        type: text
+    id_product:
+        label: 'Mã sản phẩm'
+        type: text
+    id_seller:
+        label: 'Mã Shop'
+        type: text
+    product_name:
+        label: 'Tên sản phẩm'
+        type: text
+    quantity:
+        label: 'Số lượng '
+        type: number
+    money:
+        label: 'Đơn giá'
+        type: number
+    status:
+        label: 'Trạng thái'
+        type: text
+    status_payment:
+        label: 'Trạng thái  thanh toán'
+        type: text

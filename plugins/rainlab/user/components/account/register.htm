@@ -1,0 +1,32 @@
+{% if canRegister %}
+{{ form_ajax('onRegister') }}
+<form>
+    <div class="wrapper fadeInUp">
+        <div id="formContent">
+            <h2 class="active"> Register </h2>
+            <div id="resultsRegister"></div>
+            <input class="fadeIn second" name="name" type="text" id="registerName" placeholder="Nhập tên đăng nhập" />
+            <input class="fadeIn second" name="email" type="text" id="registerEmail" placeholder="Nhập email của bạn" />
+
+            {% if loginAttribute == "username" %}
+            <div id="content" class="form-group">
+                <label for="registerUsername">Username</label>
+                <input name="username" type="text" class="form-control" id="registerUsername"
+                    placeholder="Enter your username" />
+            </div>
+            {% endif %}          
+            <input class="fadeIn second" name="password" type="password" id="registerPassword"
+                placeholder="Nhập mật khẩu" />
+            <select class="btn btn-default" name="type_user" id="type_user">
+                <option value="customer">Khách hàng</option>
+                <option value="seller">Người bán hàng</option>
+            </select>
+            
+            <button type="submit">Đăng ký</button>
+        </div>
+    </div>
+</form>
+{{ form_close() }}
+{% else %}
+<!-- Registration is disabled. -->
+{% endif %}

@@ -1,0 +1,439 @@
+
+.view-home-product{
+  padding: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border: 1px solid white;
+  border-radius: 14px;
+  background: #FAFBFB;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  text-align: center;
+}
+
+@media screen and (max-width: 936px) {
+    .view-home-product{
+    display: grid;
+    grid-template-columns: auto;
+    padding: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border: 1px solid white;
+    border-radius: 14px;
+    background: #FAFBFB;
+  }
+}
+
+.product-main{
+  background: gainsboro;
+  height: 400px;
+  width: 100%;
+}
+.product-thumbnails div{
+  cursor: pointer;
+  margin-top: 1rem;
+  height: 100px;
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  overflow: hidden;
+
+}
+.product-thumbnails > div >img{
+  opacity: 0.5;
+  flex: 1;
+  border-radius: 1rem;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: all .8s cubic-bezier(.25, .4, .45, 1.4);
+
+}
+.product-thumbnails > div > img:hover{
+  flex: 5;
+}
+.zooma-main {
+  position: relative;
+  overflow: hidden;
+}
+.photo-gallery{
+  position: relative;
+}
+
+.product-main div img{
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  cursor: zoom-in;
+  opacity: 0;
+  top: 0;
+  left: 0;
+}
+
+.product-main div img.is-loaded {
+  position: absolute; 
+}
+.product-main div img.is-active {
+  opacity: 1;
+  pointer-events: initial; 
+}
+.product-main div img.is-zoomed-in {
+  cursor: zoom-out;
+  width: initial; 
+}
+.product-thumbnails > div > img.is-active{
+  opacity: 1;
+}
+.arrow-left,
+.arrow-right {
+    position: absolute;
+    top: 84%;
+    margin-top: -25px;
+    height: 50px;
+    width: 50px;
+    z-index: 999;
+    border-radius: 50%;
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    left: -25px;
+    background: url(https://s11.postimg.org/eqnz7iwkz/arrow_left.png) no-repeat center center;
+    background-color: #FFF;
+}
+.arrow-right {
+    right: -25px;
+    left: auto;
+    background-image: url(https://s11.postimg.org/sydnw699v/arrow_right.png);
+}
+.arrow-left:hover,
+.arrow-right:hover {
+    -webkit-transform: scale(1.08);
+    transform: scale(1.08);
+    background-color: #f1f1f1;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+.arrow-left i,
+.arrow-right i{
+  font-size: 25px;
+  color: pink;
+  margin-top: 0.5em;
+  opacity: 0.5;
+}
+
+.option-product{
+  margin-left: 3em;
+}
+.option-product .op-title{
+  text-align: left !important;
+  font: 24px sans-serif;
+  margin-bottom: 0.5em;
+}
+.option-product .op-feedback div{
+  padding-right: 1em;
+  font: 14px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+  color: gray;
+}
+
+.option-product .op-feedback div:nth-child(-n + 2)::after{
+  margin-left: 1em;
+  content: "|";
+}
+.op-feedback .report{
+  position: absolute;
+  right: 0;
+}
+.option-product .sale{
+  margin-top: 1em;
+  height: 30px;
+  background-size: contain;
+  width: 100%;
+  background-image: url('https://americanpomade.vn/wp-content/uploads/2017/02/Sale-Banner-1920-x-600-FINAL.jpg');
+}
+.option-product .op-price{
+  background: #f4f4f4;
+  height: 70px;
+  padding-top: 1em;
+}
+.option-product .op-price div{
+  text-align: left !important;
+  padding-left: 1.5em;
+  font: 24px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+  color: red;
+  font-weight: bolder;
+}
+.op-form{
+  margin-top: 1em;
+  font: 16px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+  color: gray;
+}
+.op-form-input{
+  width: 80%;
+  text-align: left;
+  
+}
+.op-form-text{
+  width: 20%;
+  text-align: left;
+  margin-left: 2.5em;
+}
+.op-form-text div, .op-form-input div{
+  margin-bottom: 1em;
+}
+.input-group{
+  width: 150px;
+}
+.op-color span{
+  border: 1px solid gainsboro;
+  position: relative;
+
+}
+.op-color span:hover{
+  cursor: pointer;
+  border-color: red;
+}
+.op-color span.op-active{
+  border: 1px solid red;
+}
+.op-color span.op-active::after{
+  position: absolute;
+  content: '✓';
+  z-index: 2;
+  
+  font-weight: bold;
+  color: white;
+  bottom: 0;
+  right: 0;
+}
+.op-color span.op-active::before{
+  content: '';
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  right: 0;
+  color: red;
+  border-bottom: 27px solid red;
+  border-left: 27px solid transparent;
+}
+#error{
+  color: red;
+}
+
+.notification{
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  padding: 24px;
+  position: fixed;
+  width: 300px;
+  height: 230px;
+  top: 100px;
+  right: 250px;
+  transform: translateX(30px);
+  transition: 200ms all linear;
+}
+.notification-show{
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notifi-close{
+  position: absolute;
+  right: 20px;
+  top:  10px;
+  cursor: pointer;
+}
+.product-rate-main{
+  display: grid;
+  grid-template-columns: 75% 24%;
+  column-gap: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.product-rate{
+  background: #FAFBFB;
+  border-radius: 14px;
+}
+.product-like{
+  display: grid;
+  grid-template-columns: auto;
+  row-gap: 1em;
+  align-content: start;
+  text-align: center;
+}
+.product-like > div{
+  background: #FAFBFB;
+  border-radius: 14px;
+  padding: 1em;
+
+}
+.product-like > div > a{
+  text-decoration: none;
+}
+
+
+
+.product-rate > div > h4{
+  font-weight: normal;
+}
+
+.rating{
+  margin-bottom: 0.6em;
+}
+.review > blockquote{
+  margin-bottom: 0;
+  word-wrap: break-word;
+  border-left: 4px solid gainsboro;
+  padding: 1em;
+  color: #67767A;
+  font: 16px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+}
+.review > header > h5{
+  font-weight: normal;
+}
+.review > footer > cite{
+  position: relative;
+  width: 100%;
+  float: right;
+  border-bottom: 1px solid gainsboro;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  padding: 1em;
+}
+.review > footer > cite > span{
+  top: 0;
+  position: absolute;
+  right: 0;
+  font-weight: bold;
+  color: #67767A;
+}
+.paginate nav{
+  float: right;
+}
+.pagination li{
+  padding: 0 0.5em 0 0.5em;
+  margin-right: 0.5em;
+  
+}
+.pagination li a{
+  color: black;
+  text-decoration: none;
+}
+.pagination li a:hover{
+  color: red;
+}
+.active{
+  background: red;
+  color: white;
+}
+.pagination li:first-child{
+  border: 1px solid gainsboro;
+  color: gainsboro;
+}
+.pagination li:first-child:hover{
+  color: black;
+}
+.pagination li:last-child{
+  border: 1px solid gainsboro;
+}
+.pagination li:last-child:hover{
+  color: black;
+}
+.fa-star{
+  color: #FFDF00;
+}
+.fa-times{
+  color: white;
+  cursor: pointer;
+}
+.progress{
+  width: 83%;
+}
+#write-feedback{
+  cursor: pointer;
+}
+.form-feedback{
+  z-index: 1000;
+  position: fixed; 
+ 
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background: red;
+  width: 350px;
+  height: 530px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+.form-feedback > header{
+  background: #3066BE;
+  height: 150px;
+  width: 100%;
+}
+.hidden{
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+.form-feedback > content > form > div > input{
+  padding: 0.5em;
+  width: 100%;
+  background: gainsboro;
+  border: none;
+}
+.form-feedback > content > form > div > input:focus{
+  outline-color: gray;
+}
+.form-feedback > content > form > div > textarea:focus{
+  outline-color: gray;
+}
+.form-feedback > content > form > div > textarea{
+  background: gainsboro;
+  border: none;
+}
+.form-feedback > content > form > button{
+  width: 100%;
+}
+
+.image-shop > img{
+  border-radius: 100%;
+}
+.image-shop::after{
+  position: absolute;
+  content: 'yêu thích';
+  background: #EE4D2D;
+  padding: 5px;
+  color: white;
+  border-radius: 9px;
+  transform: translate(-75px,60px);
+  font: 14px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+}
+.title-shop{
+  text-align: left;
+}
+.shop-view > div:first-child{
+  width: 80%;
+  border-right: 1px solid gainsboro;
+}
+.description-product{
+  padding: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border: 1px solid white;
+  border-radius: 14px;
+  background: #FFFFFF;
+    
+}
+.description-product > h4{
+  font-weight: normal;
+  background: #FAFAFA;
+  padding: 0.4em;
+}

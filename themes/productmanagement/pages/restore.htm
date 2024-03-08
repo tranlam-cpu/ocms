@@ -1,0 +1,14 @@
+title = "restore"
+url = "/restore"
+layout = "default"
+is_hidden = 0
+
+[resetPassword]
+paramCode = "code"
+resetPage = "login"
+==
+<link href="{{ 'assets/login_template/css/style.css'|theme }}" rel="stylesheet">
+
+{% component 'resetPassword' %}
+{% framework extras %}
+{% scripts %}

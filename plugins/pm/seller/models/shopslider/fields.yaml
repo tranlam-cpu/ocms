@@ -1,0 +1,22 @@
+fields:
+    title:
+        label: title
+        span: auto
+        type: text
+    url:
+        label: url
+        span: auto
+        type: text
+    shopid:
+        label: shopid
+        span: auto
+        type: text
+    image:
+        label: 'File upload'
+        mode: file
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        type: fileupload

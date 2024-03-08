@@ -1,0 +1,17 @@
+
+    <form id="form" data-request="{{ __SELF__ }}::onRestorePassword"
+        data-request-update="'{{ __SELF__ }}::reset': '#partialUserResetForm'">
+        <div class="wrapper fadeInUp">
+            <div id="formContent">
+                <h2 class="active"> Restore Passowrd </h2>
+                <p class="underlineHover">
+                    <strong>Lost your password?</strong> No problem! Enter your email address to verify your account.
+                </p>
+                <div class="form-group">
+                    <input name="email" type="text" class="fadeIn second" id="userRestoreEmail"
+                        placeholder="Enter your email">
+                </div>
+                <input type="submit" class="fadeIn fourth" value="Restore Passowrd">
+            </div>
+        </div>
+    </form>

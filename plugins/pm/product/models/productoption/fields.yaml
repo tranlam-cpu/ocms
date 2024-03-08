@@ -1,0 +1,39 @@
+fields:
+    ProductName:
+        label: 'Product Name'
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
+    description:
+        label: Description
+        size: ''
+        span: full
+        type: textarea
+    quantity:
+        label: quantity
+        span: auto
+        type: number
+    ColorName:
+        label: Color
+        nameFrom: name
+        descriptionFrom: description
+        span: left
+        type: relation
+    SizeName:
+        label: Size
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
+    gallery:
+        label: 'Gallery Image'
+        mode: image
+        imageWidth: '60'
+        imageHeight: '60'
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: full
+        type: fileupload

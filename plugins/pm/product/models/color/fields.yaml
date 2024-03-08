@@ -1,0 +1,5 @@
+fields:
+    name:
+        label: 'Color Name'
+        span: auto
+        type: text

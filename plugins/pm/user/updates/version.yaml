@@ -1,0 +1,6 @@
+1.0.1:
+    - 'Initialize plugin.'
+1.0.2:
+    - 'Created table pm_user_user'
+    - builder_table_create_pm_user_user.php
+    - new_field.php

@@ -1,0 +1,119 @@
+title = "donhang"
+url = "/donhang"
+layout = "default"
+is_hidden = 0
+==
+<?php
+use Pm\Product\Models\CheckoutDetails;
+use Pm\Product\Models\Checkout;
+function onStart(){
+
+    $user = Auth::getUser(); 
+    if($user){
+        $this['chitiet']=CheckoutDetails::query()->where('id_user',$user->id)->get();
+      
+    };
+
+}
+
+function onHuy(){
+    $a = Input::get('id');
+    $b = Input::get('id_checkout');
+    CheckoutDetails::query()->where('id',$a)->delete();
+    Checkout::query()->where('id',$b)->delete();
+}
+
+?>
+==
+{% put styles %}
+<link href="{{ 'assets/css/productcard.css'|theme }}" rel="stylesheet">
+<style>
+     /* Tuỳ chỉnh kiểu bảng */
+     table {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ccc;
+    }
+
+    /* Tuỳ chỉnh kiểu dòng tiêu đề */
+    tr {
+        background-color: #f2f2f2;
+        text-align: left;
+        padding: 8px;
+    }
+
+    /* Tuỳ chỉnh kiểu dòng dữ liệu */
+    td {
+        text-align: left;
+        padding: 8px;
+
+    }
+
+    /* Tuỳ chỉnh kiểu nút hủy */
+    .ghost {
+        background-color: transparent;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #555;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .ghost:hover {
+        background-color: #ccc;
+    }
+
+    /* Tuỳ chỉnh kiểu trung tâm cho phần tử chính giữa */
+    #main {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+{% endput %}
+
+
+<h1>Đơn hàng</h1>
+{% if chitiet[0] %}
+
+{% else %}
+<div>bạn chưa có đơn hàng</div>
+{% endif %}
+<div id="main">
+    <table>
+        {%for ct in chitiet%}
+        <tr>
+            <td>ID: {{ct.id}}</td>
+        </tr>
+        <tr>
+            <td>Tên sản phẩm: {{ct.product_name}}</td>
+        </tr>
+        <tr>
+            <td>Số lượng: {{ct.quantity}}</td>
+        </tr>
+        <tr>
+            <td>Giá: {{ct.money}}   </td>
+        </tr>
+        <tr>
+            <td>Trạng thái giao hàng: {{ct.status}}</td>
+        </tr>
+        <tr>
+            <td>Trạng thái thanh toán: {{ct.status_payment}}</td>
+        </tr>
+        <tr>
+            <td><form data-request="onHuy">
+                <button type="submit" class="ghost" id="Huy">Hủy đơn hàng</button>
+                <input type="hidden" name="id" value="{{ct.id}}">
+                <input type="hidden" name="id_checkout" value="{{ct.id_checkout}}">
+            </form></td>
+        </tr>
+        {%endfor%}
+    </table>
+</div>
+
+
+
+{% put scripts %}
+
+{% endput %}
+==

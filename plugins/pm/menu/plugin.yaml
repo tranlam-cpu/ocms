@@ -1,0 +1,16 @@
+plugin:
+    name: 'pm.menu::lang.plugin.name'
+    description: 'pm.menu::lang.plugin.description'
+    author: pm
+    icon: oc-icon-adjust
+    homepage: ''
+navigation:
+    main-menu-item:
+        label: Menu
+        url: pm/menu/menus
+        icon: icon-list
+        sideMenu:
+            side-menu-item:
+                label: 'Sub Menu'
+                url: pm/menu/submenus
+                icon: icon-sitemap

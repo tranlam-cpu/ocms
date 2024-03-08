@@ -1,0 +1,16 @@
+columns:
+    name:
+        label: 'Họ tên'
+        type: text
+    sdt:
+        label: 'Số điện thoại'
+        type: phone
+    address:
+        label: 'Địa chỉ'
+        type: text
+    email:
+        label: Email
+        type: text
+    created_at:
+        label: 'Ngày đặt hàng'
+        type: datetime

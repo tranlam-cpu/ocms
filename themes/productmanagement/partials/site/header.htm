@@ -1,0 +1,197 @@
+[builderList]
+modelClass = "Pm\Menu\Models\Menu"
+scope = "-"
+scopeValue = "{{ :scope }}"
+displayColumn = "name"
+noRecordsMessage = "No records found"
+detailsPage = "-"
+detailsUrlParameter = "id"
+pageNumber = "{{ :page }}"
+
+[session]
+security = "all"
+==
+<?php
+use Pm\Menu\Models\Menu;
+    use Pm\Menu\Models\SubMenu;
+
+    function onStart(){
+        if(Cookie::get('user_auth')){
+          Cookie::queue('sum_product',count(Cookie::get())-4, time()+86400);
+        }elseif(Cookie::get('admin_auth')){
+            Cookie::queue('sum_product',count(Cookie::get())-3, time()+86400);
+        }else{
+            Cookie::queue('sum_product',count(Cookie::get())-2, time()+86400);
+        }
+
+
+        $this['total']=Cookie::get('sum_product');
+
+        $this['menu']= Menu::get();
+        $this['smenu']= DB::table('pm_menu_submenu')
+        ->Join('pm_menu_','pm_menu_submenu.parent_name_id','=','pm_menu_.id')
+        ->select('pm_menu_submenu.title as s','pm_menu_.title as m', 'pm_menu_submenu.url as surl')
+        ->get();
+
+    }
+?>
+==
+{% set records = builderList.records %}
+{% set displayColumn = builderList.displayColumn %}
+{% set noRecordsMessage = builderList.noRecordsMessage %}
+{% set detailsPage = builderList.detailsPage %}
+{% set detailsKeyColumn = builderList.detailsKeyColumn %}
+{% set detailsUrlParameter = builderList.detailsUrlParameter %}
+
+
+<nav id ="pc-menu" class="navbar px-3 py-0 navbar-expand navbar-dark d-none d-sm-inline-flex justify-content-between align-items-center">
+    <ul class="record-list navbar-nav mx-auto text-center h-100">
+        {% for record in menu %}
+            {% if record.active == 1 %}
+                {% if record.type == 0 %}
+                    <li class="nav-item">
+                        {% if record %}
+                       
+                        <a class="nav-link header-title-parent h-100 pt-2 text-dark" href="{{ record.url }}">
+                            {% if record.title == 'login' and user %}
+                                Hello {{ user.name }}
+                            {% else %}
+                                {{ record.title }}
+                            {% endif %}
+                        </a>
+                            <ul class="nav-sub navbar-nav">
+                                {% for rc in smenu %}
+                                    {% if rc.m == record.title %}
+                                    <li class="nav-item py-1">
+                                        <a class="nav-link header-title text-dark" href='/{{record.url}}/{{ rc.surl }}'>
+                                            {{ rc.s }}
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if record.title == 'login' %}
+                                {% if user %}
+                                <li class="nav-item py-1">
+                                    <a class="btn outline" data-request="onLogout" data-request-data="redirect: '/'">Sign out </a>
+                                </li>
+                                {% if user.type_user == 'seller' %}
+                                <li class="nav-item py-1">
+                                    <a class="btn outline" href="/seller">Kênh bán hàng</a>
+                                </li>
+                                {% endif %}      
+                                {% endif %} 
+                                {% endif %}
+
+                            </ul>    
+                    </li>
+                        {% else %}
+                            <li class="no-data">{{ noRecordsMessage }}</li>
+                        {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+            
+    </ul>
+
+    <ul class="record-list navbar-nav mx-auto text-center h-100">
+        {% for record in menu %}
+            {% if record.active == 1 %}
+                {% if record.type == 1 %}
+                    <li class="nav-item">
+                        <a class="nav-link header-title-parent h-100 pt-2 text-dark" href="{{ record.url }}">
+                            {% if record.title == 'login' and user %}
+                                Hello {{ user.name }}
+                            {% elseif record.title == 'cart' %}
+                                <i class="fa fa-shopping-cart"></i> {{ record.title }}
+                                {% if total > 0 %}
+                                <span class="text-danger">({{total}})</span>
+                                {% endif %}
+                            {% else %}
+                                {{ record.title }}
+                            {% endif  %}
+                                
+                            
+                        </a>
+
+                        <ul class="nav-sub navbar-nav mx-auto">
+                            {% if record.title == 'login' and user %}
+                                 {% if user.type_user == 'seller' %}
+                                    <li class="nav-item py-1">
+                                        <a class="nav-link header-title text-dark h-100 pt-3" href="/seller">Kênh bán hàng</a>
+                                    </li>
+                                {% endif %}
+                                <li class="nav-item py-1">
+                                        <a class="nav-link header-title text-dark h-100 pt-3" href="/donhang">Đơn hàng</a>
+                                    </li>
+                                <li class="nav-item py-1">
+                                    <a class="nav-link header-title text-dark h-100 pt-3" data-request="onLogout" data-request-data="redirect: '/'">Sign out</a>
+                                </li>
+                            {% endif %}
+                            {% for rc in smenu %}
+                            {% if rc.m == record.title %}
+                            <li class="nav-item py-1">                          
+                                <a class="nav-link header-title text-dark" href="{{ rc.url }}">
+                                    {{ rc.s }}
+
+                                </a>    
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </ul>         
+</nav>
+
+
+
+<nav id="mobile-menu" class="navbar navbar-dark d-sm-none d-flex flex-column">
+  <div class="w-100 d-flex p-3 flex-row justify-content-between">
+    <div>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+
+    <div>
+      <button id="hamburger-menu" class="navbar-brand">
+        <span class="hamburger-top"></span>
+        <span class="hamburger-middle"></span>
+        <span class="hamburger-bottom"></span>
+      </button>
+    </div>
+      
+  </div>
+
+
+  <!-- Links -->
+  <div class="mobile-link w-100 text-center">
+    <ul class="navbar-nav">
+        {% for record in menu %}
+            <li class="d-flex flex-column nav-item-mobile mx-auto w-100">
+                <a class="nav-link header-title pt-3" href="#"> {{ record.title }}</a>
+               
+                <ul class="navbar-nav mx-auto w-100">
+                    {% for rc in smenu %}
+                        {% if rc.m == record.title %}
+                                <li class="nav-sub-mobile w-100">                          
+                                    <a class="nav-link header-title pt-3" href="">
+                                        {{ rc.s }}
+                                    </a>    
+                                </li>  
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+  </div>
+  
+
+</nav>
+
+<div class="rax-banned d-flex align-items-center text-center justify-content-center">
+    <img src="https://as2.ftcdn.net/v2/jpg/05/00/63/55/1000_F_500635527_FqcZOgXiYUwJEnZVZRUbTny3pYnIvhFq.jpg" height="80px" width="80%">
+</div>

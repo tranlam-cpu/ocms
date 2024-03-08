@@ -1,0 +1,14 @@
+1.0.1:
+    - 'Initialize plugin.'
+1.0.2:
+    - 'Created table pm_menu_'
+    - builder_table_create_pm_menu_.php
+1.0.3:
+    - 'Created table pm_menu_submenu'
+    - builder_table_create_pm_menu_submenu.php
+1.0.4:
+    - 'Updated table pm_menu_submenu'
+    - builder_table_update_pm_menu_submenu.php
+1.0.5:
+    - 'Updated table pm_menu_submenu'
+    - builder_table_update_pm_menu_submenu_2.php

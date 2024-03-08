@@ -1,0 +1,69 @@
+plugin:
+    name: 'pm.product::lang.plugin.name'
+    description: 'pm.product::lang.plugin.description'
+    author: pm
+    icon: oc-icon-adjust
+    homepage: ''
+navigation:
+    main-menu-item:
+        label: Category
+        url: pm/product/categorys
+        icon: icon-plus
+        permissions:
+            - Category
+        sideMenu:
+            side-menu-item:
+                label: 'Category Details'
+                url: pm/product/categorydetails
+                icon: icon-sitemap
+                permissions:
+                    - Category
+            side-menu-item2:
+                label: 'Category Tags'
+                url: pm/product/categorytags
+                icon: icon-tags
+                permissions:
+                    - Category
+            side-menu-item3:
+                label: 'Product Item'
+                url: pm/product/products
+                icon: icon-sitemap
+            side-menu-item6:
+                label: 'Product Option Item'
+                url: pm/product/productoptions
+                icon: icon-sitemap
+            side-menu-item4:
+                label: 'Color Item'
+                url: pm/product/colors
+                icon: icon-adjust
+            side-menu-item5:
+                label: 'Size Item'
+                url: pm/product/sizes
+                icon: icon-signal
+            side-menu-item7:
+                label: 'Checkout item'
+                url: pm/product/checkout
+                icon: icon-briefcase
+            side-menu-item8:
+                label: 'Checkout Details'
+                url: pm/product/checkoutdetails
+                icon: icon-shopping-cart
+    main-menu-item2:
+        label: Product
+        url: pm/product/products
+        icon: icon-glass
+        permissions:
+            - Product
+    main-menu-item3:
+        label: 'Product Option'
+        url: pm/product/productoptions
+        icon: icon-life-ring
+        permissions:
+            - Product
+permissions:
+    Category:
+        tab: Category_design
+        label: Category
+    Product:
+        tab: Category_design
+        label: Product

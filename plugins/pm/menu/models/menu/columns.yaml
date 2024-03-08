@@ -1,0 +1,17 @@
+columns:
+    title:
+        label: 'tiêu đề'
+        type: text
+        searchable: true
+        sortable: false
+    url:
+        label: 'đường dẫn'
+        type: text
+    type:
+        label: kiểu
+        type: typetext
+        sortable: true
+    active:
+        label: 'trạng thái'
+        type: activetext
+        sortable: true

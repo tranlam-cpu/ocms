@@ -1,0 +1,14 @@
+==
+<?php
+use Pm\Product\Models\ProductOption;
+
+    function onStart()
+    {
+        $this['image']= ProductOption::query()->where('product_name_id','=',$this['id'])->get();
+
+    }
+?>
+==
+{% for img in image[0].gallery %}
+    <img class="item" src="{{img.path}}">
+{% endfor %}

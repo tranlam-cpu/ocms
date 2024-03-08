@@ -1,0 +1,12 @@
+list: $/pm/product/models/productoption/columns.yaml
+modelClass: Pm\Product\Models\ProductOption
+title: ProductOptions
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'pm/product/productoptions/update/:id'

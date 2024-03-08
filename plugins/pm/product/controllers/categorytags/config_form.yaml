@@ -1,0 +1,10 @@
+name: CategoryTags
+form: $/pm/product/models/categorytag/fields.yaml
+modelClass: Pm\Product\Models\CategoryTag
+defaultRedirect: pm/product/categorytags
+create:
+    redirect: 'pm/product/categorytags/update/:id'
+    redirectClose: pm/product/categorytags
+update:
+    redirect: pm/product/categorytags
+    redirectClose: pm/product/categorytags

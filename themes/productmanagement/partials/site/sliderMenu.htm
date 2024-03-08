@@ -1,0 +1,49 @@
+[builderList]
+modelClass = "Pm\Product\Models\CategoryDetails"
+scope = "scopePopular"
+scopeValue = 5
+displayColumn = "name"
+noRecordsMessage = "No records found"
+detailsPage = "-"
+detailsUrlParameter = "id"
+pageNumber = "{{ :page }}"
+==
+
+{% set records = builderList.records %}
+{% set displayColumn = builderList.displayColumn %}
+{% set noRecordsMessage = builderList.noRecordsMessage %}
+{% set detailsPage = builderList.detailsPage %}
+{% set detailsKeyColumn = builderList.detailsKeyColumn %}
+{% set detailsUrlParameter = builderList.detailsUrlParameter %}
+<div class="header-homepage d-flex flex-column flex-sm-row align-items-center justify-content-around p-2">
+	<div class="header-left h-100 d-flex justify-content-center align-items-center">
+		<img src="{{ 'assets/images/logo.png'|theme }}">
+	</div>
+	<div class="header-right h-100 d-flex justify-content-center align-items-center flex-column">
+
+		<div class="header-search w-100">
+			<form class="d-flex position-relative" data-request="onSearch" data-request-update="'@_list': '#list'" role="search">
+		      <input class="w-100 input-search" name="q" type="search" placeholder="Áo khoác nam" aria-label="Search">
+		      <button class="btn-search" type="submit">Search</button>
+		    </form>
+		</div>
+
+		<div class="header-categories mt-2 w-100 d-flex justify-content-between">
+			<div class="category">
+				<ul class="d-flex flex-row w-100 navbar-nav">
+			    {% for record in records %}
+			        <li class="nav-item ml-2">
+			            <a class="nav-link text-dark header-title-categories" href="#">{{ attribute(record, displayColumn) }}</a>
+			        </li>
+			    {% else %}
+			        <li class="no-data">{{ noRecordsMessage }}</li>
+			    {% endfor %}
+				</ul>
+			</div>
+			<div class="a">
+				<a class="nav-link header-title-categories text-dark" href="#">xem thêm ...</a>
+			</div>
+		</div>
+
+	</div>
+</div>

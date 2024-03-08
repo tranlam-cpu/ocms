@@ -1,0 +1,226 @@
+title = "home/:page?"
+url = "/"
+layout = "default"
+is_hidden = 0
+
+[builderList]
+modelClass = "Pm\Product\Models\Category"
+scope = "-"
+scopeValue = "{{ :scope }}"
+displayColumn = "name"
+noRecordsMessage = "No records found"
+detailsPage = "-"
+detailsUrlParameter = "id"
+pageNumber = "{{ :page }}"
+
+[Loadmore]
+pageNumber = "{{ :page }}"
+==
+<?php
+use Pm\Product\Models\Categorydetails;
+	use Pm\Product\Models\CategoryTag;
+	use Pm\Product\Models\Product;
+	use Pm\Product\Models\Productoption;
+
+	function onStart(){
+		$this['productNew']= Product::query()->where('active',1)->take(2)->orderBy('created_at', 'desc')->get();
+
+		$fs= Product::query()
+		->join('pm_product_category_details','pm_product_.product_category_details_id','=','pm_product_category_details.id')
+		->orWhere('pm_product_category_details.name','like','%'.'nữ'.'%')
+		->orWhere('pm_product_category_details.name','like','%'.'nam'.'%')
+		->where('active',1)
+		->orderBy('created_at', 'desc')
+		->select('pm_product_.name','pm_product_.id')
+		->get();
+		$id1=$fs[0]->id;
+		
+		$id2=$fs[1]->id;
+
+		$this['fashion1']=Product::query()->where('active',1)->where('id',$id1)->first();
+		$this['fashion2']=Product::query()->where('active',1)->where('id',$id2)->first();
+		$this['pd']= Product::query()->where('active',1)->offset(2)->take(5)->orderBy('created_at', 'desc')->get();
+	}
+
+    function onDetailscategory(){
+    	$data = post();
+
+    	$details=Categorydetails::query()->where('parent_category_id',$data['id'])->get();
+
+    	$tag=DB::table('pm_product_category_details_tag')
+    	->join('pm_product_category_tag','pm_product_category_details_tag.category_tag_id','=','pm_product_category_tag.id')
+    	->join('pm_product_category_details','pm_product_category_details_tag.category_details_id','=','pm_product_category_details.id')
+    	->select('pm_product_category_details.id as id','pm_product_category_tag.name as name' ,'pm_product_category_tag.slug as slug')
+    	->get();
+
+    	$product=DB::table('pm_product_')
+    	->join('pm_product_category_details','pm_product_.product_category_details_id','=','pm_product_category_details.id')
+    	->join('pm_product_category','pm_product_category_details.parent_category_id','pm_product_category.id')
+    	->select('pm_product_category.id as id','pm_product_.name as name', 'pm_product_.id as product_id')->get();
+    	
+    	
+        return [
+        	'#Details' => $this->renderPartial('components/detailsCategory',[
+        		'details'=>$details,
+        		'tag'=>$tag,
+        		'product'=>$product,
+        		'id'=>$data['id'],
+        	])
+        ];
+
+        
+    }
+
+    public function onSearch(){
+		$this['ob']= Product::with('option')->where('name','like','%'.Input::get('q').'%')->get();
+		
+	}
+?>
+==
+{% set records = builderList.records %}
+{% set displayColumn = builderList.displayColumn %}
+{% set noRecordsMessage = builderList.noRecordsMessage %}
+{% set detailsPage = builderList.detailsPage %}
+{% set detailsKeyColumn = builderList.detailsKeyColumn %}
+{% set detailsUrlParameter = builderList.detailsUrlParameter %}
+
+{% put styles %}
+    <link href="{{ 'assets/css/home.css'|theme }}" rel="stylesheet">
+    <link href="{{ 'assets/css/product.css'|theme }}" rel="stylesheet">
+{% endput %}
+
+
+
+<div class="view-home row w-100 h-100">
+	<div class="view-home-1 col-sm-8 p-0 d-flex flex-row h-100 position-relative">
+		<div class="w-25">
+			<div class="view-home-1-title p-3">
+				thể loại 
+			</div>
+			<div class="view-home-1-content d-flex">
+				<div class="w-100">
+					<ul class="record-list navbar-nav">
+					    {% for record in records %}
+					        <li id="{{record.id}}" class="category-nav nav-item pl-3 pb-1">     
+								<a href="/categorys/{{ record.slug }}">
+									{{ attribute(record, displayColumn) }}
+								</a>
+								<span class="view-home-nose text-muted pr-2">></span>        
+					        </li>
+					    {% else %}
+					        <li class="no-data">{{ noRecordsMessage }}</li>
+					    {% endfor %}
+					</ul>
+					<div class="end position-absolute">
+						xem thêm ⇊
+					</div>
+				</div>
+
+				<div id="Details" class="view-home-1-midcontent w-75 position-absolute d-flex flex-row">
+		
+				</div>
+			</div>
+		</div>
+		
+		
+		
+		<div class="w-75 p-3 view-category">
+			<div class="view-home-1-title view-home-1-sub-title">
+				Danh mục
+			</div>
+			
+			<div class="row">
+				<div class="grid-content-1 col d-flex flex-column mr-0">
+					<div class="grid-title mt-2">
+						Sản phẩm mới
+						<span>New</span>
+					</div>
+					<div class="grid-content row h-100 p-1 px-3">
+						<a class="col grid-image p-0 m-0 mr-2" href="products/{{productNew[0].slug}}">
+							<img src="{{productNew[0].image.path}}" alt="">
+						</a>
+						<a class="col grid-image p-0 m-0" href="products/{{productNew[1].slug}}">
+							<img src="{{productNew[1].image.path}}" alt="">
+						</a>
+					</div>
+				</div>
+				<div class="grid-content-2 col d-flex flex-column">
+					<div class="grid-title mt-2">
+						Ifashion
+						<span>Hot</span>
+					</div>
+					<div class="grid-content row h-100 p-1 px-3">
+						<div class="col grid-image p-0 m-0 mr-2">
+							<img src="{{fashion1.image.path}}" alt="">
+						</div>
+						<div class="col grid-image p-0 m-0">
+							<img src="{{fashion2.image.path}}" alt="">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="grid-content-3 col d-flex flex-column">
+					<div class="grid-title mt-2">
+						Giảm giá
+						<span>sale</span>
+					</div>
+					<div class="grid-content row h-100 p-1 px-3">
+						<div class="col grid-image p-0 m-0 mr-2 h-100">
+							<img src="{{pd[0].image.path}}" alt="">
+						</div>
+						<div class="col grid-image p-0 m-0 mr-2 h-100">
+							<img src="{{pd[1].image.path}}" alt="">
+						</div>
+						<div class="col grid-image p-0 m-0 mr-2 h-100">
+							<img src="{{pd[2].image.path}}" alt="">
+						</div>
+						<div class="col grid-image p-0 m-0 mr-2 h-100">
+							<img src="{{pd[3].image.path}}" alt="">
+						</div>
+						<div class="col grid-image p-0 m-0 mr-2 h-100">
+							<img src="{{pd[4].image.path}}" alt="">
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="view-home-2 col ml-sm-4 p-3">
+		<div class="view-home-2-image">
+			<img class="image-1" src="//gw.alicdn.com/imgextra/i3/O1CN01hv61X127k1SbDU0ox_!!6000000007834-2-tps-310-200.png">
+			<img class="image-2" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQidkE0cXJXok9Tm-v-y_RGXtqNRGlxxDZLOw&usqp=CAU" width="60px">
+			<div class="view-home-2-text">
+				Xin chào! xin chào ~
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="view-home-rax-banned">
+    <img src="https://media.istockphoto.com/id/1186197177/vector/thanksgiving-sale-banner-website-header-or-newsletter-cover-red-and-orange-fall-leaves.jpg?s=170667a&w=0&k=20&c=1bqrVE_pBrGifnK5yRPth4KCHeSao9S1cCuptV1C0iI=" height="70px" width="100%">
+</div>
+<h4 class="product-title">Danh mục sản phẩm</h4>
+<div id="list" class="view-home w-100 h-100 view-home-product">
+	{% partial '@_list' %}
+</div>	
+
+<div id="load-more-button" class="loadmore">
+    <a data-request="onLoadMore" data-request-data="page: 1" href="#">load more</a>
+</div>
+
+<div class="rax-view">
+	<img class="rax-image elevator-image" autowebp="false" data-once="true" src="//gw.alicdn.com/imgextra/i4/O1CN015N8fhK1ZmakOXoCdV_!!6000000003237-2-tps-72-74.png">
+	<div class="d-flex flex-column">
+		<a href="#top">^</a>
+		<a href="#">...</a>
+		<a href="#bottom">v</a>
+	</div>
+</div>
+
+
+{% put scripts %}
+	<script src="{{ 'assets/js/home.js'|theme }}"></script>
+{% endput %}

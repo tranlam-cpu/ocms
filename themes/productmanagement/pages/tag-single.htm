@@ -1,0 +1,37 @@
+title = "tag single"
+url = "/tag/:slug"
+layout = "default"
+is_hidden = 0
+
+[builderDetails]
+modelClass = "Pm\Product\Models\CategoryTag"
+identifierValue = "{{ :slug }}"
+modelKeyColumn = "slug"
+displayColumn = "name"
+notFoundMessage = "Record not found"
+==
+{% set record = builderDetails.record %}
+{% set displayColumn = builderDetails.displayColumn %}
+{% set notFoundMessage = builderDetails.notFoundMessage %}
+
+{% put styles %}
+    <link href="{{ 'assets/css/product.css'|theme }}" rel="stylesheet">
+{% endput %}
+
+
+
+<div class="view-home w-100 h-100 view-home-product">
+    {% if record %}
+        {% partial 'components/ProductCategoryTag' id=record.id %}
+    {% else %}
+        {{ notFoundMessage }}
+    {% endif %}
+</div>
+
+
+
+
+
+{% put scripts %}
+   <!--  <script src="{{ 'assets/js/home.js'|theme }}"></script> -->
+{% endput %}

@@ -1,0 +1,6 @@
+plugin:
+    name: 'pm.user::lang.plugin.name'
+    description: 'pm.user::lang.plugin.description'
+    author: pm
+    icon: oc-icon-adjust
+    homepage: ''

@@ -1,0 +1,48 @@
+title = "login"
+url = "/login"
+layout = "default"
+is_hidden = 0
+
+[account]
+paramCode = "code"
+forceSecure = 0
+requirePassword = 0
+==
+<link href="{{ 'assets/login_template/css/style.css'|theme }}" rel="stylesheet">
+
+ {% if not user %}
+<div class="container" id="container">
+        <div class="form-container sign-in-container">
+            {% partial account ~ '::signin' %}
+        </div>
+        
+        <div class="form-container sign-up-container">
+            {% partial account ~ '::register' %}
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Đăng nhập tại đây</h1>
+                    <p>Hãy đăng nhập nếu bạn đã có tài khoản riêng</p>
+                    <button class="ghost" id="signIn">Đăng nhập</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Đăng ký tại đây</h1>
+                    <p>Bắt đầu hành trình mua sắm với chúng tôi</p>
+                    <button class="ghost" id="signUp">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+</div>
+{% else %}
+
+    {% partial account ~ '::activation_check' %}
+
+    {% partial account ~ '::update' %}
+
+    {% partial account ~ '::deactivate_link' %}
+
+{% endif %}
+
+<script type="text/javascript" src="{{ 'assets/login_template/js/style.js'|theme }}"></script>

@@ -1,0 +1,15 @@
+plugin:
+    name: 'pm.seller::lang.plugin.name'
+    description: 'pm.seller::lang.plugin.description'
+    author: pm
+    icon: oc-icon-adjust
+    homepage: ''
+navigation:
+    main-menu-item:
+        label: Shop
+        url: pm/seller/shop
+        icon: icon-list
+    main-menu-item2:
+        label: slidershop
+        url: pm/seller/shopslider
+        icon: icon-life-ring

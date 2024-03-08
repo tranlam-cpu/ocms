@@ -1,0 +1,7 @@
+columns:
+    description:
+        label: 'Mô tả'
+        type: text
+    quantity:
+        label: 'Số lượng'
+        type: text

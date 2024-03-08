@@ -1,0 +1,4 @@
+title: SubMenus
+modelClass: Pm\Menu\Models\SubMenu
+toolbar:
+    buttons: reorder_toolbar

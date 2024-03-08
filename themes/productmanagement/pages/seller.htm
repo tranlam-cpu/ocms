@@ -1,0 +1,16 @@
+title = "seller"
+url = "/seller"
+layout = "default"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "home"
+
+[addshop]
+==
+<link href="{{ 'assets/login_template/css/style.css'|theme }}" rel="stylesheet">
+<link href="{{ 'assets/banner.css'|theme }}" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+{% component 'addshop' %}

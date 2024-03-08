@@ -1,0 +1,641 @@
+title = "product single"
+url = "/products/:slug"
+layout = "default"
+is_hidden = 0
+
+[builderDetails]
+modelClass = "Pm\Product\Models\Product"
+identifierValue = "{{ :slug }}"
+modelKeyColumn = "slug"
+displayColumn = "name"
+notFoundMessage = "Record not found"
+
+[reviews]
+categoryFilter = "{{ :slug }}"
+
+[session]
+security = "all"
+==
+<?php
+use Pm\Product\Models\Product;
+use Pm\Seller\Models\Shop;
+
+public function onStart(){
+
+
+    if(Cookie::get('user_auth')){
+      Cookie::queue('sum_product',count(Cookie::get())-4, time()+86400);
+    }elseif(Cookie::get('admin_auth')){
+        Cookie::queue('sum_product',count(Cookie::get())-3, time()+86400);
+    }else{
+        Cookie::queue('sum_product',count(Cookie::get())-2, time()+86400);
+    }
+    
+    $slug=$this->controller->vars['this']['param']['slug'];
+
+    $idshop=Product::query()->where('slug',$slug)->first()->seller_shop_id;
+    $id=Product::query()->where('slug',$slug)->first()->id;
+    $this['shop']=Shop::query()->where('id',$idshop)->firstOrFail();
+
+    $des=DB::table('pm_product_option')->where('product_name_id',$id)->get();
+   
+
+    if(json_encode($des)!="[]"){
+        $this['description']=$des[0]->description;
+    }else{
+        $this['description']="chưa có mô tả";
+    }
+    
+
+
+    $rate=DB::table('vojtasvoboda_reviews_reviews')
+    ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+    ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+    ->where('slug',$slug)
+    ->sum('rating');
+
+    
+
+
+    if($rate){
+        $this['rating']=DB::table('vojtasvoboda_reviews_reviews')
+        ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+        ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+        ->where('slug',$slug)
+        ->count();
+
+
+        $this['rate']=number_format($rate/$this['rating'],1,',','.');
+        $this['rateceil']=number_format(ceil($rate/$this['rating']),1,',','.');
+
+        $rate1=DB::table('vojtasvoboda_reviews_reviews')
+        ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+        ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+        ->where('slug',$slug)
+        ->where('rating',1)->count();
+
+        $rate2=DB::table('vojtasvoboda_reviews_reviews')
+        ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+        ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+        ->where('slug',$slug)
+        ->where('rating',2)->count();
+
+        $rate3=DB::table('vojtasvoboda_reviews_reviews')
+        ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+        ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+        ->where('slug',$slug)
+        ->where('rating',3)->count();
+
+        $rate4=DB::table('vojtasvoboda_reviews_reviews')
+        ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+        ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+        ->where('slug',$slug)
+        ->where('rating',4)->count();
+
+        $rate5=DB::table('vojtasvoboda_reviews_reviews')
+        ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+        ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+        ->where('slug',$slug)
+        ->where('rating',5)->count();
+
+        $this['rate1']=number_format($rate1/ $this['rating']*100,1,'.',',');
+        $this['rate2']=number_format($rate2/ $this['rating']*100,1,'.',',');
+        $this['rate3']=number_format($rate3/ $this['rating']*100,1,'.',',');
+        $this['rate4']=number_format($rate4/ $this['rating']*100,1,'.',',');
+        $this['rate5']=number_format($rate5/ $this['rating']*100,1,'.',',');
+    }else{
+        $this['rating']=0;
+        $this['rate1']=0;
+        $this['rate2']=0;
+        $this['rate3']=0;
+        $this['rate4']=0;
+        $this['rate5']=0;
+        $this['rate']=0;
+    }
+
+    }
+
+    public function onSave(){
+
+        $data = post();
+        
+        $cart = str_replace(" ","",'cart'.$data[2]['value'].$data[6]['value'].$data[7]['value']);
+
+
+
+        if(Cookie::get($cart)==null){
+
+            $ob=[];
+            foreach($data as $name => $value){
+                $ob[$value['name']]=$value['value'];
+            }
+            $ob['total']=$ob['quantity']*$ob['price'];
+          
+
+            Cookie::queue($cart,json_encode($ob), time()+86400);
+        }else{
+            $ob=[];
+            $quantity=json_decode(Cookie::get($cart))->quantity;
+
+            $ob=[];
+            foreach($data as $name => $value){
+                $ob[$value['name']]=$value['value'];
+            }
+
+            $ob['quantity']= $ob['quantity']+$quantity;
+            $ob['total']=$ob['quantity']*$ob['price'];
+            Cookie::queue($cart,json_encode($ob), time()+86400);
+            
+           
+        }
+
+         
+        
+
+        
+       
+    }
+
+
+    public function onCheckout(){
+        $data = post();
+
+        $cart = str_replace(" ","",'cart'.$data[2]['value'].$data[6]['value'].$data[7]['value']);
+
+        $ob=[];
+        foreach($data as $name => $value){
+            $ob[$value['name']]=$value['value'];
+        }
+        $ob['total']=$ob['quantity']*$ob['price'];
+      
+
+        Cookie::queue($cart,json_encode($ob), time()+86400);
+
+        Session::put('message',$cart);
+        return Redirect::to('checkout');
+
+    }
+
+    use Vojtasvoboda\Reviews\Models\Review;
+
+    public function onFeedback(){
+        
+        $category=DB::table('vojtasvoboda_reviews_categories')->where('slug',Input::get('slug'))->first()->id;
+        
+        
+        if(Input::get('title')){
+            $approved=true;
+        }else{
+            $approved=false;
+        }
+
+
+
+        $ob = new Review();
+        $ob->email=Input::get('email');
+        $ob->name=Input::get('name');
+        $ob->title=Input::get('title');
+        $ob->rating=(int)Input::get('Review')['rating'];
+        $ob->content=Input::get('content');
+        $ob->approved=$approved;
+        $ob->save();
+
+     
+
+        DB::table('vojtasvoboda_reviews_review_category')->insertGetId([
+            'review_id'=>$ob->id,
+            'category_id'=>(int)$category
+        ]);
+
+
+    }
+?>
+==
+{% set record = builderDetails.record %}
+{% set displayColumn = builderDetails.displayColumn %}
+{% set slug = builderDetails.identifierValue %}
+{% set notFoundMessage = builderDetails.notFoundMessage %}
+
+{% put styles %}
+    <link href="{{ 'assets/css/productcard.css'|theme }}" rel="stylesheet">
+    <link href="{{ 'assets/css/jquery.rateyo.min.css'|theme }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+{% endput %}
+
+
+<div class="view-home w-100 h-100 view-home-product">
+    <div class="photo-gallery d-flex flex-column">
+        <div class="product-main zooma-main">
+            
+        </div>
+        <div class="product-thumbnails zooma-thumbnail product__focus">
+            <div class="items">
+                <img class="item" src="{{record.image.path}}">
+                {% partial 'components/ListGallery' id=record.id %}
+            </div>
+            
+           
+           
+
+        </div>
+        <div class="arrow-left"><i class="fa fa-arrow-left"></i></div>
+        <div class="arrow-right"><i class="fa fa-arrow-right"></i></div>
+    </div>
+    <div class="option-product d-flex flex-column">
+        <div class="op-title">{{record.name}}</div>
+        <div class="op-feedback d-flex flex-row w-100 position-relative">
+            <div>
+                {% for i in 1..5 %}
+                    {% if i <= rateceil %}
+                        <i class="fa fa-star" aria-hidden="true"></i> 
+                    {% else %}
+                        <i class="fa fa-star-o" aria-hidden="true"></i> 
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div><span class="text-dark">{{rating}}</span> đánh giá</div>
+            <div>đã bán</div>
+            <div class="report">tố cáo</div>
+            <div><strong class="text-dark"><a href="/shop/{{record.seller_shop_id}}">SHOP</a></strong></div>
+        </div>
+        <div class="sale"></div>
+        <div class="op-price">
+            <div>{{record.make_price}} $</div>
+        </div>
+        <div class="op-form d-flex flex-row">
+            <div class="op-form-text">
+                <div>Bảo hiểm</div>
+                <div>Vận chuyển</div>
+                <div class="title-color pt-2 pb-3">Màu</div>
+                <div class="title-size pt-2 pb-3">Size</div>
+                <div>&nbsp;</div>
+                <div>Số lượng</div>
+            </div>
+            <div class="op-form-input">
+                <div>Bảo hiểm thời trang <a class="ml-3" href="#"> Tìm hiểu thêm</a></div>
+                <div>Miễn phí vận chuyển</div>
+                {% partial 'components/SizeAndColor' id=record.id %}
+                <div class="table-size"><a href="#" data-toggle="modal" data-target=".bd-example-modal-lg">Bảng quy đổi kích cở ></a></div>
+                <div class="w-100">
+                    <input form="form-cart" type="number" name="quantity" value="1" min="1" max="100"/> 
+                    <label class="quantity"> sản phẩm có sẵn</label>
+                    <div id="error"> </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row ml-5 mt-3 border-bottom pb-5">
+            <button form="form-cart" type="submit" class="mr-5 btn btn-outline-primary"><i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+            <a class="btn btn-info" onclick="checkout()">Mua ngay</a>
+        </div>
+        <div class="mt-3">
+            {{record.description}}
+            
+        </div>
+    </div>
+</div>
+<form id="form-cart" enctype="multipart/form-data" onsubmit="return checkform()">
+    <input type="hidden" name="seller_shop_id" value="{{record.seller_shop_id}}">
+    <input type="hidden" name="id" value="{{record.id}}">
+    <input type="hidden" name="name" value="{{record.name}}">
+    <input type="hidden" name="price" value="{{record.make_price}}">
+    <input type="hidden" name="image" value="{{record.image.path}}">
+    <input type="hidden" name="color" >
+    <input type="hidden" name="size" >
+</form>
+
+<div class="shop-view view-home w-100 h-100 view-home-product">
+    <div class="d-flex flex-row flex-start align-items-center">
+        <div class="image-shop mr-5">
+            <img src="{{shop.image.path}}" width="80px" height="80px">
+        </div>
+        <div class="title-shop text-start">
+            <div>shop: {{shop.shopname}}</div>
+            <div class="text-muted">email: {{shop.email}}</div>
+            <div class="text-primary"><i>dtlh: {{shop.phone}}</i></div>
+            <div>
+                <a class="btn btn-outline-primary" href="../shop/{{shop.id}}"><i class="fa fa-shopping-bag" aria-hidden="true"></i> Xem Shop</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <div class="d-flex flex-column al">
+            <div class="mb-4">
+                <span class="mr-5 text-muted">Đánh giá</span>
+                <span class="text-danger">15,2K</span>
+            </div>
+            <div>
+                <span class="mr-5 text-muted">Sản phẩm</span>
+                <span class="text-danger">325</span>
+            </div>
+        </div>
+        <div class="d-flex flex-column al">
+            <div class="mb-4">
+                <span class="mr-5 text-muted">Tỉ lệ phản hồi</span>
+                <span class="text-danger">88%</span>
+            </div>
+            <div>
+                <span class="mr-5 text-muted">Thời gian phản hồi</span>
+                <span class="text-danger">trong vài giờ</span>
+            </div>
+        </div>
+        <div class="d-flex flex-column al">
+            <div class="mb-4">
+                <span class="mr-5 text-muted">tham gia</span>
+                <span class="text-danger">3 năm trước</span>
+            </div>
+            <div>
+                <span class="mr-5 text-muted">Người theo dõi</span>
+                <span class="text-danger">25,5K</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="description-product w-100 h-100">
+    <h4>Mô tả sản phẩm</h4>
+    <div class="content-des">
+        {{description}}
+    </div>
+</div>
+
+<!-- Large modal -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <img src="https://cf.shopee.vn/file/sg-11134201-22110-kslll0kq2fjvb7" width="100%">
+    </div>
+  </div>
+</div>
+
+<div class="notification">
+    <div class="notifi-close"><i class="fa fa-times"></i></div>
+    <div class="d-flex flex-row w-100">
+        <div class="w-50">
+            <img src="{{record.image.path}}" width="80%" height="80px">
+        </div>
+        <div class="w-50 notifi-content">
+            
+        </div>
+    </div>
+    <div class="text-center py-2">
+        <a class="btn btn-outline-warning w-100" href="/cart">Xem giỏ hàng</a>
+    </div>
+    <div class="text-center">
+        <a class="btn btn-primary w-100" onclick="checkout()">Mua Ngay</a>
+    </div>
+</div>
+
+<div class="product-rate-main">
+    <div class="product-rate d-flex flex-column">
+        <div class="p-3">
+            <h4>Đánh giá sản phẩm</h4>
+        </div>
+        <div class="px-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex flex-row">
+               <h5 class="pr-1">{{rate}} </h5> 
+               <p>of 5 star</p>
+            </div>
+            <div class="d-flex flex-column">
+                <div>
+                    {% for i in 1..5 %}
+                        {% if i <= rateceil %}
+                            <i class="fa fa-star" aria-hidden="true"></i> 
+                        {% else %}
+                            <i class="fa fa-star-o" aria-hidden="true"></i> 
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div>
+                    <i class="text-muted">{{rating}} rating</i>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row px-3 mt-3 w-100 align-items-center">
+            <div class="mr-3">
+                5 <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+           
+            <div class="progress mr-3">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: {{rate5}}%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+         
+            <div>
+                {{rate5}} %
+            </div>
+        </div>
+        <div class="d-flex flex-row px-3 mt-2 w-100 align-items-center">
+            <div class="mr-3">
+                4 <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+           
+            <div class="progress mr-3">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: {{rate4}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+         
+            <div>
+                {{rate4}} %
+            </div>
+        </div>
+        <div class="d-flex flex-row px-3 mt-2 w-100 align-items-center">
+            <div class="mr-3">
+                3 <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+           
+            <div class="progress mr-3">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: {{rate3}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+         
+            <div>
+                {{rate3}} %
+            </div>
+        </div>
+        <div class="d-flex flex-row px-3 mt-2 w-100 align-items-center">
+            <div class="mr-3">
+                2 <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+           
+            <div class="progress mr-3">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: {{rate2}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+         
+            <div>
+                {{rate2}} %
+            </div>
+        </div>
+        <div class="d-flex flex-row px-3 mt-2 w-100 align-items-center">
+            <div class="mr-3">
+                1 <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+           
+            <div class="progress mr-3">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: {{rate1}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+         
+            <div>
+                {{rate1}} %
+            </div>
+        </div>
+            
+        <span id="dom-feedback">
+            {% partial 'components/reviews' %}
+        </span>
+        
+        
+    </div>
+
+    <div class="product-like">
+        {% partial 'components/ListProduct' id=record.id %}
+    </div>
+</div>
+
+<div class="form-feedback hidden">
+    <header class="d-flex flex-column p-3">
+        <div class="text-right">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+        <div>
+            <h5 class="text-light">Send us your feedback!</h5>
+            <div class="text-light">
+                Do you have a suggestion for this product? let us know in the field below
+            </div>
+        </div>
+    </header>
+
+    <content class="d-flex flex-column">
+        <form class="p-4" data-request="onFeedback" data-request-success="feedback()" data-request-update="'components/reviews': '#dom-feedback'">
+            <div class="mb-3">
+                <label class="form-label font-weight-bold">How was your experience?</label>
+                <div class="rateyo" data-readonly="false" data-input-id="StarRating-formRating-input-rating"></div>
+                <input type="hidden" id="StarRating-formRating-input-rating" name="Review[rating]" value="4">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted">Your title</label><br>
+                <input type="text" name="title" width="150">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted">Your feedback</label><br>
+                <textarea rows="3" cols="38" name="content">
+                    
+                </textarea>
+            </div>
+            <input type="hidden" name="name" value="{{user.name}}">
+            <input type="hidden" name="email" value="{{user.email}}">
+            <input type="hidden" name="slug" value="{{slug}}">
+            <button type="submit" class="btn btn-primary" data-attach-loading>Send feedback</button>
+        </form>
+    </content>
+</div>
+
+
+{% put scripts %}
+    <script src="{{ 'assets/js/jquery.rateyo.min.js'|theme }}"></script>
+    <script src="{{ 'assets/js/starrating.js'|theme }}"></script>
+    <script src="{{ 'assets/js/productcard.js'|theme }}"></script>
+    <script src="{{ 'assets/js/bootstrap-input-spinner.js'|theme }}"></script>
+    <script>
+        
+        
+
+        function feedback(){
+            $('.form-feedback').toggleClass('hidden');
+        }
+
+        $('#write-feedback').on('click',function(){
+            $('.form-feedback').toggleClass('hidden');
+        })
+        $('.fa-times').on('click',function(){
+            $('.form-feedback').toggleClass('hidden');
+        })
+
+
+
+        $("input[type='number']").inputSpinner()
+
+        $(".color").on('click',function(){
+            $('.color').removeClass('op-active');
+            $(this).addClass('op-active');
+            $('input[name="color"]').val($(this).text());
+          
+        })
+
+        $(".size").on('click',function(){
+            $('.size').removeClass('op-active');
+            $(this).addClass('op-active');
+            $('input[name="size"]').val($(this).text());
+          
+        })
+
+
+        $(".quantity").html($('input[name="quantity"]').val()+" sản phẩm có sẵn");
+
+    </script>
+    <script type="text/javascript">
+        function checkform(){
+            if($(".color").hasClass('op-active') && $(".size").hasClass('op-active') || $(".color").text()==""){
+                $('#error').html("");
+
+                $.request(
+                'onSave',
+                {
+                    data: $('#form-cart').serializeArray(),
+                    success: function(data) {
+                        $('.notifi-content').html(`
+                            <div>${$('input[name="name"]').val()}</div>
+                            <div>số lượng ${$('input[type="number"]').val()}</div>
+                            <div>đơn giá ${$('input[name="price"]').val()*$('input[type="number"]').val()} $</div>
+                        `);
+        
+                        $('.notification').addClass('notification-show');
+                    }
+                })
+                return false;
+            }
+            $('#error').html("vui lòng chọn phân loại trang!");
+            return false;
+        }
+
+
+        $(document).on('click',function(event){
+            if($('.notification').hasClass('notification-show')){
+                if(event.target.className!="notification notification-show" || event.target.className!=""){
+                    $('.notification').removeClass('notification-show');
+                }
+            }
+            
+        })
+
+
+        $(document).ready(function() {
+            var nd=$('.content-des').text();
+            nd=nd.replace(/\n/g, '<br>\n');
+            $('.content-des').html(nd);
+
+            $('.rax-banned').remove();
+            
+            console.log($('.color').text().trim())
+            if($('.color').text().trim()==""){
+                $('.title-color').remove();
+                $('.title-size').remove();
+                $('.table-size').remove();
+            }
+        });
+
+       
+        function checkout(){
+            if($(".color").hasClass('op-active') && $(".size").hasClass('op-active') || $(".color").text()==""){
+                    $.request(
+                    'onCheckout',
+                    {
+                        data: $('#form-cart').serializeArray(),
+                    })
+            }else{
+                $('#error').html("vui lòng chọn phân loại trang!");
+            }
+        }
+    </script>
+{% endput %}

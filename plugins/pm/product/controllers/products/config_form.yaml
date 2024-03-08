@@ -1,0 +1,10 @@
+name: Products
+form: $/pm/product/models/product/fields.yaml
+modelClass: Pm\Product\Models\Product
+defaultRedirect: pm/product/products
+create:
+    redirect: 'pm/product/products/update/:id'
+    redirectClose: pm/product/products
+update:
+    redirect: pm/product/products
+    redirectClose: pm/product/products

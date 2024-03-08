@@ -1,0 +1,358 @@
+title = "cart"
+url = "/cart"
+layout = "cart"
+is_hidden = 0
+==
+<?php
+	use Pm\Product\Models\Product;
+
+	public function onStart(){
+
+		
+
+		if (Session::has('message')) {
+		    Session::flush('message');
+		}
+
+
+        $a = Cookie::get();
+    	
+
+
+        $arr=[];
+        $arrcart=[];
+       foreach($a as $key => $value){
+
+        $arr[$key]=$value;
+       }
+       $arr=array_values($arr);
+
+       
+       $arr=preg_grep('/name/i', $arr);
+       foreach($arr as $value){
+
+       	array_push($arrcart,json_decode($value));
+       }
+
+
+       
+       $this['item']=Product::query()->where('seller_shop_id',1)->get();
+
+       $this['cart']=$arrcart;
+
+   		
+
+    }
+
+
+    public function onChangeQuantity(){
+    	$quantity=Input::get('quantity');
+    	$id=Input::get('id');
+
+
+
+    	$cartid = str_replace(" ","",$id);
+
+    	if($quantity=="0"){
+    		Cookie::queue($cartid,null, -1);
+    	}else{
+    		$cart=json_decode(Cookie::get($cartid));
+	    	$cart->quantity=$quantity;
+	    	$total=$cart->quantity*$cart->price;
+	    	$cart->total=$total;
+	    	$ob=[];
+	    	foreach($cart as $key => $value){
+	    		$ob[$key]=$value;
+	    	}
+	    	Cookie::queue($cartid,json_encode($ob), time()+86400);
+
+	    	return [
+	    		'total'=>$total,
+	    	];
+    	}
+
+	
+    }
+
+    public function onDeleteCartId(){
+    	$id=Input::get('id');
+
+    	$cartid = str_replace(" ","",$id);
+    	Cookie::queue($cartid,null, -1);
+    }
+
+    public function onCheckout(){
+    	Session::put('message',Input::get('id'));
+    	return Redirect::to('checkout');
+    }
+?>
+
+
+
+==
+{% put styles %}
+    <link href="{{ 'assets/css/cart.css'|theme }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+{% endput %}
+
+<div class="cart-title mt-4 mb-4 d-flex justify-content-between">
+	<div class="d-flex flex-row">
+		<div>
+			<input type="checkbox" name="checkall">
+		</div>
+		<div>
+			Sản phẩm
+		</div>
+	</div>
+	<div class="d-flex flex-row">
+		<div class="mr-5">
+			Đơn giá
+		</div>
+		<div class="number text-center">
+			Số lượng
+		</div>
+		<div>
+			Số tiền
+		</div>
+		<div>
+			Thao tác
+		</div>
+	</div>
+</div>
+{% for ob in cart  %}
+
+<div class="cart-title d-flex justify-content-between">
+	<div class="d-flex flex-row">
+		<div>
+			<input type="checkbox" name="check">
+		</div>
+		<div>
+			<img class="mr-3" src="{{ob.image}}" width="100px" height="100px">
+			{{ob.name}}{{ob.color}}{{ob.size}}
+		</div>
+	</div>
+	<div class="d-flex flex-row">
+		<div>
+			{{ob.price}} $
+		</div>
+		<div class="number">
+			<input id="cart{{ob.id}}{{ob.color}}{{ob.size}}" class="number-spinner" type="number" value="{{ob.quantity}}" min="0" max="100" /> 
+		</div>
+		<div class="total">
+			<span class="total_spin">{{ob.total}} </span><span> $</span>
+			<div class="spin spinner-border text-primary" role="status">
+			  <span class="visually-hidden"></span>
+			</div>
+		</div>
+		<div class="trash-cart">
+			<a onclick="deletecart('cart{{ob.id}}{{ob.color}}{{ob.size}}')"><i class="fa fa-trash"></i></a>
+			
+		</div>
+	</div>
+</div>
+{% endfor %}
+
+<div id="bottom" class="cart-title mt-4 mb-4 d-flex justify-content-between align-items-center">
+	<div class="d-flex flex-row">
+		
+		<div>
+			Lưu vào mục đã thích
+		</div>
+	</div>
+	<div class="d-flex flex-row align-items-center">
+		
+		<div class="total-bottom">
+			Tổng thanh toán ( 0 sản phẩm): 0đ
+		</div>
+		<div>
+			<a id="check-cart-data" class="btn btn-primary">Mua Hàng</a>
+		</div>
+	</div>
+</div>
+
+<div class="cart-view-product p-4">
+	<h5>Có thể bạn sẽ thích</h5>
+	<div class="list-cart">
+	{% for record in item %}
+		{% if record.active == 1 %}
+		<div>
+			<a href="../products/{{record.slug}}" class="card-item">
+				<div class="card-image">
+					<img src="{{record.image.path}}" width="215px" height="230px">
+				</div>
+				<div class="card-title text-muted">
+					{{ html_limit(record.name)|raw }}...
+				</div>
+				<div class="card-price">
+					<h5 class="text-danger">{{ record.make_price }}$ </h5>&nbsp;<span class="text-muted"> 210 đã mua!</span>
+				</div>
+			</a>
+		</div>
+		
+		{% endif %}
+
+	{% endfor %}
+	</div>
+</div>
+
+
+{% put scripts %}
+    <script src="{{ 'assets/js/bootstrap-input-spinner.js'|theme }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+    	$('.spin').hide();
+        $("input[type='number']").inputSpinner()
+        $('.rax-banned').remove();
+
+        $('.number-spinner').on('change',function(event){
+
+      		event.target.parentElement.parentElement.children[2].children[0].style.display='none';
+        	event.target.parentElement.parentElement.children[2].children[1].style.display='block';
+        	$.request(
+                'onChangeQuantity',
+                {
+                    data: {
+                    	quantity: event.target.value,
+                    	id: event.target.id
+                    },
+                    success: function(data) {
+                    	if(data.total){
+                    		event.target.parentElement.parentElement.children[2].innerHTML=`<span class="total_spin">${data.total.toFixed(2)} $</span>
+								<div class="spin spinner-border text-primary" role="status">
+								  <span class="visually-hidden"></span>
+								</div>`;
+							event.target.parentElement.parentElement.children[2].children[0].style.display='block';
+							event.target.parentElement.parentElement.children[2].children[1].style.display='none';
+                    	}else{
+                    		event.target.parentElement.parentElement.parentElement.remove();
+                    
+                    	}
+                    	
+
+                    	dom_bottom();
+                    	
+                      
+                    }
+                })
+        })
+
+
+
+        function deletecart(id){
+        	
+        	$.request(
+                'onDeleteCartId',
+                {
+                    data: {
+                    	id: id
+                    },
+                    success: function(data) {
+                    	var ob=document.getElementById(id);
+                    	ob.parentElement.parentElement.parentElement.remove();
+                                
+                    }
+                })
+        }
+
+
+        $('input[name="checkall"]').on('click',function(e){
+        	if($('input[name="checkall"]:checked').val()){
+        		$('input[name="check"]').prop('checked', true);
+        		dom_bottom();
+        	}else{
+        		$('input[name="check"]').prop('checked', false);
+        		dom_bottom();
+        	}
+        })
+
+
+        
+    </script>
+
+    <script type="text/javascript">
+    	 const position=$('#bottom').offset().top;
+    	$(window).scroll(function (event) {
+    	
+    		if($(window).scrollTop()+580 < position){
+    			if($('#bottom').hasClass('cart-bottom')){
+
+    			}else{
+    				$('#bottom').addClass('cart-bottom');
+    			}
+    			
+    		}else{
+    			if($('#bottom').hasClass('cart-bottom')){
+    				$('#bottom').removeClass('cart-bottom');
+    			}
+    			
+    		}
+		    
+		});
+
+
+	$('input[name="check"]').on('click',function(e){
+		dom_bottom();
+	})
+
+
+
+	$('#check-cart-data').on('click',function(){
+		var arr=$('input[name="check"]:checked');
+		if(arr.length>0){
+			const arr2=[];
+			for(var i=0;i<arr.length;i++){
+				arr2.push(arr[i].parentElement.parentElement.parentElement.children[1].children[1].children[0].getAttribute('id').replace(/ /g,''));
+			}
+			
+
+			$.request(
+	        'onCheckout',
+	        {
+	            data: {
+	            	id: arr2
+	            },
+	            
+	        })
+		}else{
+			Toastify({
+			  text: "bạn chưa chọn mặt hàng thanh toán!!",
+			  className: "info",
+			  duration: 1500,
+			  position: "center",
+			  gravity: "top",
+			  style: {
+			    background: "linear-gradient(to right, #ee9ca7, #ffdde1)",
+			    color:"gray",
+			  }
+			}).showToast();
+		}
+		
+			
+		
+	})
+
+	function dom_bottom(){
+
+		
+		var arr=$('input[name="check"]:checked');
+		
+		var arr2=$('input[name="check"]');
+		var tong=0,number=0;
+		for (var i =0; i <arr.length; i++) {
+			tong+=parseFloat(arr[i].parentElement.parentElement.parentElement.children[1].children[2].children[0].textContent);
+			number++;
+		}
+		if(number==0){
+			$('input[name="checkall"]').prop('checked', false);
+		}else if(number==arr2.length){
+			$('input[name="checkall"]').prop('checked', true);
+		}else{
+			$('input[name="checkall"]').prop('checked', false);
+		}
+		$('.total-bottom').html(`Tổng thanh toán ( ${number} sản phẩm): ${tong.toFixed(2)} $`); 
+	}
+    </script>
+
+{% endput %}

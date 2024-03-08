@@ -1,0 +1,15 @@
+title = "test"
+url = "/test/:page?"
+layout = "default"
+is_hidden = 0
+
+[Loadmore]
+pageNumber = "{{ :page }}"
+==
+<div id="list">
+    {% partial '@_list' %}
+</div>
+
+<div id="load-more-button" class="loadmore">
+    <a data-request="onLoadMore" data-request-data="page: 1" href="#">load more</a>
+</div>

@@ -1,0 +1,10 @@
+name: Menus
+form: $/pm/menu/models/menu/fields.yaml
+modelClass: Pm\Menu\Models\Menu
+defaultRedirect: pm/menu/menus
+create:
+    redirect: 'pm/menu/menus/update/:id'
+    redirectClose: pm/menu/menus
+update:
+    redirect: pm/menu/menus
+    redirectClose: pm/menu/menus

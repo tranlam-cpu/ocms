@@ -1,0 +1,62 @@
+[builderList]
+modelClass = "Pm\Product\Models\Product"
+scope = "-"
+scopeValue = "{{ :scope }}"
+displayColumn = "name"
+noRecordsMessage = "No records found"
+detailsPage = "-"
+detailsUrlParameter = "id"
+pageNumber = "{{ :page }}"
+==
+
+
+<?php
+
+use Pm\Product\Models\Product;
+
+function onStart()
+{
+    $this['product']=Product::get();
+
+
+
+    $this['products']=DB::table('pm_product_product_tag')
+    ->join('pm_product_','pm_product_product_tag.product_id','pm_product_.id')
+    ->where('category_tag_id','=',$this['id'])
+    ->get();
+    
+
+   
+}
+?>
+==
+
+{% set records = builderList.records %}
+{% set displayColumn = builderList.displayColumn %}
+{% set noRecordsMessage = builderList.noRecordsMessage %}
+{% set detailsPage = builderList.detailsPage %}
+{% set detailsKeyColumn = builderList.detailsKeyColumn %}
+{% set detailsUrlParameter = builderList.detailsUrlParameter %}
+
+
+
+{% for record in products %}
+    {% for rc in product  %}
+        {% if record.id == rc.id %}
+            <a href="../products/{{rc.slug}}" class="card-item">
+                <div class="card-image">
+                    <img src="{{rc.image.path}}" width="215px" height="230px">
+                </div>
+                <div class="card-title text-muted">
+                    {{ html_limit(rc.name,25)|raw }}...
+                </div>
+                <div class="card-price">
+                    {{ rc.price }} $ &nbsp;<span class="text-muted"> 210 đã mua!</span>
+                </div>
+            </a>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="no-data">Sản phẩm này tạm thời chưa có!</div>
+{% endfor %}
+

@@ -1,0 +1,21 @@
+columns:
+    name:
+        label: 'Tên sản phẩm'
+        type: text
+        searchable: true
+        sortable: true
+    description:
+        label: 'Mô tả'
+        type: text
+    price:
+        label: 'Đơn giá'
+        type: number
+    sold:
+        label: 'Đã bán'
+        type: number
+    active:
+        label: 'Trạng thái'
+        type: text
+    slug:
+        label: Slug
+        type: text

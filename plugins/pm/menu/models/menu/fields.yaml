@@ -1,0 +1,22 @@
+fields:
+    title:
+        label: 'Tiêu đề'
+        span: full
+        type: text
+    url:
+        label: Url
+        span: full
+        type: text
+    type:
+        label: 'Kiểu Menu'
+        options:
+            - left
+            - right
+        showSearch: true
+        span: left
+        type: dropdown
+    active:
+        label: Active
+        span: left
+        default: 0
+        type: checkbox

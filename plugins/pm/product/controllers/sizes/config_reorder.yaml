@@ -1,0 +1,4 @@
+title: Sizes
+modelClass: Pm\Product\Models\Size
+toolbar:
+    buttons: reorder_toolbar

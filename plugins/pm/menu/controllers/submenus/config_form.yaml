@@ -1,0 +1,10 @@
+name: SubMenus
+form: $/pm/menu/models/submenu/fields.yaml
+modelClass: Pm\Menu\Models\SubMenu
+defaultRedirect: pm/menu/submenus
+create:
+    redirect: 'pm/menu/submenus/update/:id'
+    redirectClose: pm/menu/submenus
+update:
+    redirect: pm/menu/submenus
+    redirectClose: pm/menu/submenus

@@ -1,0 +1,326 @@
+{% set products = __SELF__.products %}
+{% set productoption = __SELF__.productOption %}
+{% set categoryDetails = __SELF__.categoryDetails %}
+<!-- {{ form_open({files: true, request: 'onInsert'}) }}
+<form>
+    <table>
+        <tr>
+            <td><label> Name </label></td>
+            <td><input class="fadeIn second" name="name" type="text" /></td>
+        </tr>
+        <tr>
+            <td><label> Description </label></td>
+            <td><input class="fadeIn second" name="description" type="text" /></td>
+        </tr>
+        <tr>
+            <td><label> Price </label></td>
+            <td><input class="fadeIn second" name="price" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label> Quantity </label></td>
+            <td><input class="fadeIn second" name="quantity" type="number" /></td>
+        </tr>
+        <tr>
+            <td><label> Category Details </label></td>
+            <td>
+                <select id="categorydetailid" name="categorydetailid">
+                    {% for category in categoryDetails %}
+                    <option value="{{ category.id }}">{{category.name}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label> Active </label></td>
+            <td><input class="fadeIn second" name="active" type="checkbox" checked /></td>
+        </tr>
+        <tr>
+            <td><input type="file" id="img" name="img" accept=".jpg, .jpeg, .png" /></td>
+            <td><input type="submit" class="fadeIn third" value="Add"></td>
+        </tr>
+    </table>
+</form> -->
+<!-- {{ form_close() }} -->
+{{ form_open({files: true, request: 'onInsert'}) }}
+<form>
+    <ul class="list-group shadow">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4" style="color: darkgray;"><strong>THÊM SẢN PHẨM</strong></h1>
+        </div>
+        <li class="list-group-item">
+            <!-- Custom content-->
+            <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                <div class="media-body order-2 order-lg-1">
+                    <h5 class="mt-0 font-weight-bold mb-2">NAME:
+                        <input required class="form-control" type="text" name="name" value='{{ product.name }}' />
+                    </h5>
+                    <p class="font-italic text-muted mb-0 small">DESCRIPTION:
+                        <input class="form-control" type="text" name="description" value='{{ product.description }}' />
+                    </p>
+                    <div class="d-flex align-items-center justify-content-between mt-1">
+                        <h6 class="font-weight-bold my-2">PRICE:
+                            <input required type="number" name="price" value='{{ product.price }}' />
+                        </h6>
+                        <h6 class="font-weight-bold my-2">QUANTITY:
+                            <input required name="quantity" type="number" />
+                        </h6>
+                        <h6>ACTIVE:
+                            <input type="checkbox" name="active" checked />
+                        </h6>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mt-1">
+                        <h6 class="font-weight-bold my-2">CATEGORY:
+                            <select id="categorydetailid" name="categorydetailid">
+                                {% for category in categoryDetails %}
+                                <option value="{{ category.id }}">{{category.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </h6>
+                    </div>
+
+                </div>
+                <div class="ml-lg-5 order-1 order-lg-2">
+                    <ul style="list-style: none;">
+                        <li><label for="img"><i class="btn btn-secondary">Chọn ảnh sản phẩm</i></label>
+                        </li>
+                        <li>
+                            <input style="display: none;" type="file" id="img" name="img" accept=".jpg, .jpeg, .png" />
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ml-lg-5 order-1 order-lg-3">
+                    <ul style="list-style: none;">
+                        <li>
+                            <input class="form-control btn-primary-outline" type="submit" class="fadeIn third"
+                                value="ADD" />
+                        </li>
+                    </ul>
+                </div>
+                <!-- <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" width="200"
+                class="ml-lg-5 order-1 order-lg-2"> -->
+            </div> <!-- End -->
+        </li>
+    </ul>
+</form>
+{{ form_close() }}
+<div class="row text-center text-white mb-5"></div>
+<div>
+    <div>
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4" style="color: darkgray;"><strong>DANH SÁCH SẢN PHẨM</strong></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mx-auto">
+            <!-- List group-->
+            <ul class="list-group shadow">
+                <!-- list group item-->
+                {% for product in products %}
+                {{ form_open({files: true, request: 'onUpdate'}) }}
+                <form>
+                    <li class="list-group-item" style="background: linear-gradient(to right, rgba(255,255,255,0.8) 50%,
+                    rgba(255,255,255,1)), url('{{product.image.path}}'); background-size: cover;">
+                        <!-- Custom content-->
+                        <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                            <div class="media-body order-2 order-lg-1">
+                                <div>
+                                    ID: {{ product.id }}<input id="id" name="id" type="text" value='{{product.id}}'
+                                        hidden />
+                                    <h5 class="mt-0 font-weight-bold mb-2">NAME:
+                                        <input required style="background-color: transparent;
+                                    border: 0px solid;
+                                    height: 20px;
+                                    width: 160px;
+                                    color: #1900ff;" type="text" name="productname"
+                                            value='{{ product.name }}' />
+                                    </h5>
+                                    <p class="text-muted mb-0">DESCRIPTION:
+                                        <textarea style="background-color: transparent; border-radius: 10px; width: 300px; height: 80px;" type="text" name="productdescription">
+                                            {{ product.description }}
+                                        </textarea>
+                                    </p>
+                                    <div class="d-flex align-items-center justify-content-between mt-1">
+                                        <h6 class="font-weight-bold my-2">PRICE:
+                                            <input required type="number" name="productprice" value='{{ product.price }}' />
+                                        </h6>
+                                        {% for productoption in productoption %}
+                                        {% if productoption.product_name_id == product.id %}
+                                        <h6 class="font-weight-bold my-2">QUANTITY:
+                                            <input required type="number" name="productquantity"
+                                                value='{{ productoption.quantity }}' />
+                                        </h6>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <h6>ACTIVE:
+                                            {% if product.active==1 %}
+                                            <input type="checkbox" name="productactive" checked />
+                                            {% else %}
+                                            <input type="checkbox" name="productactive" />
+                                            {% endif %}
+                                        </h6>
+
+                                        <!-- <ul class="list-inline small">
+                                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+                                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+                                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+                                        <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+                                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-gray"></i></li>
+                                    </ul> -->
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mt-1">
+                                        <h6 class="font-weight-bold my-2">CATEGORY:
+                                            <select id="categorydetailid" name="categorydetailid">
+                                                {% for category in categoryDetails %}
+                                                {% if category.id==product.product_category_details_id %}
+                                                <option value="{{ category.id }}" selected>{{category.name}}</option>
+                                                {% else %}
+                                                <option value="{{ category.id }}">{{category.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="ml-lg-5 order-1 order-lg-2">
+                                <ul style="list-style: none;">
+                                    <li><img src='{{ product.image.path }}' alt="placeholder image"
+                                            style="border-top-left-radius: 20%; max-width: 200px; min-height: 150;" />
+                                    </li>
+                                    <li>
+                                        <label for="img{{ product.image.id }}"><i class="btn btn-secondary">Thay đổi
+                                                ảnh
+                                                đại diện</i></label>
+                                        <input type="file" style="display: none;" id="img{{ product.image.id }}"
+                                            name="anh1" accept=".jpg, .jpeg, .png" />
+                                        <!-- <label for="img1"><i class="btn btn-info">Thay ảnh sản phẩm</i></label>
+                                        <input type="file" id="img1" name="img" accept=".jpg, .jpeg, .png" /> -->
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="ml-lg-5 order-1 order-lg-1">
+                                <div class="d-flex align-items-center justify-content-between mt-1">
+                                    <ul style="list-style: none;">
+                                        <li>
+                                            <input class="form-control btn-primary-outline-sm" type="submit"
+                                                class="fadeIn third" value="Update" />
+                                        </li>
+                                        {{ form_close() }}
+                                        {{ form_open({request: 'onDelete'}) }}
+                                        <form>
+                                            <li style="margin-top: 10px;">
+                                                <input id="id" name="id" type="text" value='{{product.id}}' hidden />
+                                                <input class="form-control btn btn-warning" type="submit"
+                                                    class="fadeIn third" value="Delete" />
+                                            </li>
+                                        </form>
+                                        {{ form_close() }}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="ml-lg-5 order-4 order-lg-4">
+                                <div class="d-flex align-items-center justify-content-between mt-1">
+                                    <ul style="list-style: none;">
+                                        {% for productoption in productoption %}
+                                        {% if productoption.product_name_id == product.id %}
+                                        <li>
+                                            {{ form_open({ files: true, request: 'onGalleryUpdate'}) }}
+                                            <input id="id" name="id" type="text"
+                                                value='{{ productoption.product_name_id }}' hidden />
+                                            <strong><label class="btn btn-secondary"
+                                                    for="gallery{{ productoption.product_name_id }}">
+                                                    CẬP NHẬT GALLERY</label></strong>
+                                            <input type="file" style="display: none;"
+                                                id="gallery{{ productoption.product_name_id }}" name="anhphu[]"
+                                                accept=".jpg, .jpeg, .png" multiple="multiple" />
+                                            <input class="form-control btn btn-info" type="submit" class="fadeIn third"
+                                                value="Update" />
+                                            {{ form_close() }}
+                                        </li>
+                                        {% for image in productoption.gallery %}
+
+                                        <!-- {% if image.id == 31 %}
+                                        {{image.id}}
+                                        {% endif %} -->
+
+                                        <li style="text-align: center; margin-top: 5px;"><img class="item"
+                                                style=" max-width: 120px;" src="{{image.path}}"></li>
+
+                                        {% endfor %}
+                                        {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" width="200"
+                                class="ml-lg-5 order-1 order-lg-2"> -->
+                        </div> <!-- End -->
+
+                    </li> <!-- End -->
+                </form>
+
+                {% endfor %}
+            </ul> <!-- End -->
+        </div>
+    </div>
+</div>
+<!-- <table>
+    <tr>
+        <th>ID</th>
+        <th>NAME</th>
+        <th>description</th>
+        <th>price</th>
+        <th>Quantity</th>
+        <th>Loai San Pham</th>
+        <th>active</th>
+    </tr>
+    {% for product in products %}
+    {{ form_open({files: true, request: 'onUpdate'}) }}
+    <form>
+        <tr>
+            <td>{{ product.id }}<input id="id" name="id" type="text" value='{{product.id}}' hidden /></td>
+            <td><input type="text" name="productname" value='{{ product.name }}' /></td>
+            <td><input type="text" name="productdescription" value='{{ product.description }}' /></td>
+            <td><input type="number" name="productprice" value='{{ product.price }}' /></td>
+
+            {% for productoption in productoption %}
+            {% if productoption.product_name_id == product.id %}
+            <td><input type="number" name="productquantity" value='{{ productoption.quantity }}' /></td>
+            {% endif %}
+            {% endfor %}
+
+            <td>
+                <select id="categorydetailid" name="categorydetailid">
+                    {% for category in categoryDetails %}
+                    {% if category.id==product.product_category_details_id %}
+                    <option value="{{ category.id }}" selected>{{category.name}}</option>
+                    {% else %}
+                    <option value="{{ category.id }}">{{category.name}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+            {% if product.active==1 %}
+            <td><input type="checkbox" name="productactive" checked /></td>
+            {% else %}
+            <td><input type="checkbox" name="productactive" /></td>
+            {% endif %}
+            <td><img src='{{ product.image.path }}'
+                    style="border-bottom-left-radius: 20%; max-width: 170px; max-height: 200px;" /></td>
+            <td><input type="file" id="img" name="img" accept=".jpg, .jpeg, .png" /></td>
+            <td><input type="submit" class="fadeIn third" value="Update" /></td>
+        </tr>
+    </form>
+    {{ form_close() }}
+    {{ form_open({request: 'onDelete'}) }}
+    <form>
+        <tr>
+            <td><input id="id" name="id" type="text" value='{{product.id}}' hidden /></td>
+            <td><input type="submit" class="fadeIn third" value="Delete" /></td>
+        </tr>
+    </form>
+    {{ form_close() }}
+    {% endfor %}
+</table> -->

@@ -1,0 +1,49 @@
+[builderList]
+modelClass = "Pm\Product\Models\Product"
+scope = "-"
+scopeValue = "{{ :scope }}"
+displayColumn = "name"
+noRecordsMessage = "No records found"
+detailsPage = "product-single"
+detailsKeyColumn = "slug"
+detailsUrlParameter = "slug"
+pageNumber = "{{ :page }}"
+==
+<?php
+
+	use Pm\Product\Models\Product;
+	public function onStart(){
+		$a= Product::query()->where('id','=',$this['id'])->first()->seller_shop_id;
+
+		$this['item']=Product::query()->where('seller_shop_id',$a)->take(4)->get();
+	}
+
+?>
+==
+{% set records = builderList.records %}
+{% set displayColumn = builderList.displayColumn %}
+{% set noRecordsMessage = builderList.noRecordsMessage %}
+{% set detailsPage = builderList.detailsPage %}
+{% set detailsKeyColumn = builderList.detailsKeyColumn %}
+{% set detailsUrlParameter = builderList.detailsUrlParameter %}
+
+
+{% for record in item %}
+	{% if record.active == 1 %}
+	<div>
+		<a href="{{ detailsPage|page({ (detailsUrlParameter): attribute(record, detailsKeyColumn) }) }}" class="card-item">
+			<div class="card-image">
+				<img src="{{record.image.path}}" width="215px" height="230px">
+			</div>
+			<div class="card-title text-muted">
+				{{ html_limit(attribute(record, displayColumn),25)|raw }}...
+			</div>
+			<div class="card-price">
+				<h5 class="text-danger">{{ record.make_price }}$ </h5>&nbsp;<span class="text-muted"> 210 đã mua!</span>
+			</div>
+		</a>
+	</div>
+	
+	{% endif %}
+
+{% endfor %}

@@ -1,0 +1,61 @@
+[reviews]
+categoryFilter = "{{ :slug }}"
+
+[session]
+security = "all"
+==
+public function onStart(){
+    $slug=$this->controller->vars['this']['param']['slug'];
+
+    
+    $this['rview']=DB::table('vojtasvoboda_reviews_reviews')
+    ->join('vojtasvoboda_reviews_review_category','vojtasvoboda_reviews_reviews.id','=','vojtasvoboda_reviews_review_category.review_id')
+    ->join('vojtasvoboda_reviews_categories','vojtasvoboda_reviews_review_category.category_id','=','vojtasvoboda_reviews_categories.id')
+    ->where('slug',$slug)
+    ->where('approved',true)->count();
+}
+
+==
+{% if reviews is not empty %}
+<div class="reviews px-3 pt-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <h5 class="text-muted">{{rview}} Reviews</h5>
+        {% if user %}
+        <h5 id="write-feedback" class="text-muted">Write a review</h5>
+        {% endif %}
+    </div>
+    
+    <div class="stories">
+        {% macro rating(value, stars = 5) %}
+        <span class="stars">
+            {% for star in 1..stars %}
+            <i class="fa fa-star{% if star > value %}-o{% endif %}" aria-hidden="true"></i>
+            {% endfor %}
+            <span>{{ value }} of {{ stars }} stars</span>
+        </span>
+        {% endmacro %}
+
+        {% import _self as macros %}
+
+        <div class="reviews">
+            {% for review in reviews.reviews %}
+            <figure class="review">
+                <header>
+                    <h5>{{ review.title }}</h5>
+                </header>
+                <div class="rating">
+                    {{ macros.rating(review.rating) }}
+                </div>
+                <blockquote>{{ review.content }}</blockquote>
+                <footer>
+                    <cite><span>{{ review.name }}</span></cite>
+                </footer>  
+            </figure>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="paginate pr-3">
+    {{ reviews.reviews.render|raw }}
+</div>
+{% endif %}

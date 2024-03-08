@@ -1,0 +1,4 @@
+title: Categorys
+modelClass: Pm\Product\Models\Category
+toolbar:
+    buttons: reorder_toolbar

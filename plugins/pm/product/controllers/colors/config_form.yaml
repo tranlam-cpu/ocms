@@ -1,0 +1,10 @@
+name: Colors
+form: $/pm/product/models/color/fields.yaml
+modelClass: Pm\Product\Models\Color
+defaultRedirect: pm/product/colors
+create:
+    redirect: 'pm/product/colors/update/:id'
+    redirectClose: pm/product/colors
+update:
+    redirect: pm/product/colors
+    redirectClose: pm/product/colors

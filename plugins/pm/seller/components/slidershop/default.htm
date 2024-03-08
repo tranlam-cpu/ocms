@@ -1,0 +1,169 @@
+{% set shopslider = __SELF__.shopslider %}
+
+{{ form_open({files: true, request: 'onInsert'}) }}
+<form>
+    <ul class="list-group shadow">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4" style="color: darkgray;"><strong>THÊM SLIDER</strong></h1>
+        </div>
+        <li class="list-group-item">
+            <!-- Custom content-->
+            <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                <div class="media-body order-2 order-lg-1">
+                    <h5 class="mt-0 font-weight-bold mb-2">TITLE:
+                        <input required class="form-control" style="
+                    text-transform:uppercase" type="text" name="title" value='{{ product.name }}' />
+                    </h5>
+                    <p class="font-italic text-muted mb-0 small">URL:
+                        <input class="form-control" type="text" name="url" value='{{ product.description }}' />
+                    </p>
+                </div>
+                <div class="ml-lg-5 order-1 order-lg-2">
+                    <ul style="list-style: none;">
+                        <li><label for="img"><i class="btn btn-secondary">Chọn ảnh slider</i></label>
+                        </li>
+                        <li>
+                            <input style="display: none;" type="file" id="img" name="img" accept=".jpg, .jpeg, .png" />
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ml-lg-5 order-1 order-lg-3">
+                    <ul style="list-style: none;">
+                        <li>
+                            <input class="form-control btn-primary-outline" type="submit" class="fadeIn third"
+                                value="ADD" />
+                        </li>
+                    </ul>
+                </div>
+                <!-- <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" width="200"
+                class="ml-lg-5 order-1 order-lg-2"> -->
+            </div> <!-- End -->
+        </li>
+    </ul>
+</form>
+{{ form_close() }}
+
+<!-- {{ form_open({files: true, request: 'onInsert'}) }}
+<form>
+    <table>
+        <tr>
+            <td><label> Title </label></td>
+            <td><input class="fadeIn second" name="title" type="text" /></td>
+        </tr>
+        <tr>
+            <td><label> Url </label></td>
+            <td><input class="fadeIn second" name="url" type="text" /></td>
+        </tr>
+        <tr>
+            <td><input type="file" id="img" name="img" accept=".jpg, .jpeg, .png" /></td>
+            <td><input type="submit" class="fadeIn third" value="Add"></td>
+        </tr>
+    </table>
+</form>
+{{ form_close() }} -->
+
+
+<!-- <table>
+    <tr>
+        <th>ID</th>
+        <th>TITLE</th>
+        <th>URL</th>
+    </tr>
+    {% for slider in shopslider %}
+    {{ form_open({files: true, request: 'onUpdate'}) }}
+    <form>
+        <tr>
+            <td>{{ slider.id }}<input id="id" name="id" type="text" value='{{slider.id}}' hidden /></td>
+            <td><input type="text" name="slidertitle" value='{{ slider.title }}' /></td>
+            <td><input type="text" name="sliderurl" value='{{ slider.url }}' /></td>
+            <td><img src='{{ slider.image.path }}'
+                    style="border-bottom-left-radius: 20%; max-width: 170px; max-height: 200px;" /></td>
+            <td><input type="file" id="img" name="img" accept=".jpg, .jpeg, .png" /></td>
+            <td><input type="submit" class="fadeIn third" value="Update" /></td>
+        </tr>
+    </form>
+    {{ form_close() }}
+    {{ form_open({request: 'onDelete'}) }}
+    <form>
+        <tr>
+            <td><input id="id" name="id" type="text" value='{{slider.id}}' hidden /></td>
+            <td><input type="submit" class="fadeIn third" value="Delete" /></td>
+        </tr>
+    </form>
+    {{ form_close() }}
+    {% endfor %}
+</table> -->
+
+<div>
+    <div>
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-4" style="color: darkgray;"><strong>DANH SÁCH SLIDER</strong></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mx-auto">
+            <!-- List group-->
+            <ul class="list-group shadow">
+                <!-- list group item-->
+                {% for slider in shopslider %}
+                {{ form_open({files: true, request: 'onUpdate'}) }}
+                <form>
+                    <li class="list-group-item">
+                        <!-- Custom content-->
+                        <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                            
+                            <div class="media-body order-2 order-lg-1">
+                                <p><strong>ID:</strong> {{ slider.id }}<input id="id" name="id" type="text" value='{{slider.id}}' hidden /></p>
+                                <h5 class="mt-0 font-weight-bold mb-2">TITLE:
+                                    <input required class="form-control" style="
+                                text-transform:uppercase" type="text" name="slidertitle" value='{{ slider.title }}' />
+                                </h5>
+                                <p class="text-muted mb-0">URL:
+                                    <input class="form-control" type="text" name="sliderurl" value='{{ slider.url }}' />
+                                </p>
+                            </div>
+                            <div class="ml-lg-5 order-1 order-lg-2">
+                                <ul style="list-style: none;">
+                                    <li><img src='{{ slider.image.path }}' alt="placeholder image"
+                                            style="border-top-left-radius: 10px; max-width: 200px; min-height: 150;" />
+                                    </li>
+                                    <li>
+                                        <label for="img{{ slider.image.id }}"><i class="btn btn-secondary">Thay đổi
+                                                ảnh</i></label>
+                                        <input type="file" style="display: none;" id="img{{ slider.image.id }}"
+                                            name="img" accept=".jpg, .jpeg, .png" />
+                                        <!-- <label for="img1"><i class="btn btn-info">Thay ảnh sản phẩm</i></label>
+                                        <input type="file" id="img1" name="img" accept=".jpg, .jpeg, .png" /> -->
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="ml-lg-5 order-1 order-lg-3">
+                                <div class="d-flex align-items-center justify-content-between mt-1">
+                                    <ul style="list-style: none;">
+                                        <li>
+                                            <input class="form-control btn-primary-outline-sm" type="submit"
+                                                class="fadeIn third" value="Update" />
+                                        </li>
+                                        {{ form_close() }}
+                                        {{ form_open({request: 'onDelete'}) }}
+                                        <form>
+                                            <li style="margin-top: 10px;">
+                                                <input id="id" name="id" type="text" value='{{slider.id}}' hidden />
+                                                <input class="form-control btn btn-warning" type="submit"
+                                                    class="fadeIn third" value="Delete" />
+                                            </li>
+                                        </form>
+                                        {{ form_close() }}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> <!-- End -->
+
+                    </li> <!-- End -->
+                </form>
+                {% endfor %}
+            </ul> <!-- End -->
+        </div>
+    </div>
+</div>

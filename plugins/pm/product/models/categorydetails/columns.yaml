@@ -1,0 +1,12 @@
+columns:
+    name:
+        label: 'Tên danh mục'
+        type: text
+        searchable: true
+        sortable: true
+    description:
+        label: 'Mô tả'
+        type: text
+    parent_category_id:
+        label: 'Tên loại'
+        type: categoryname

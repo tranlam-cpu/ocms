@@ -1,0 +1,237 @@
+title = "shop single"
+url = "/shop/:id"
+layout = "default"
+is_hidden = 0
+
+[builderDetails]
+modelClass = "Pm\seller\Models\Shop"
+identifierValue = "{{ :id }}"
+modelKeyColumn = "id"
+displayColumn = "id"
+notFoundMessage = "Record not found"
+
+[builderList]
+modelClass = "Pm\seller\Models\Shopslider"
+scope = "-"
+scopeValue = "shopid"
+displayColumn = "shopid"
+noRecordsMessage = "No records found"
+detailsPage = "-"
+detailsUrlParameter = "id"
+pageNumber = "{{ :page }}"
+
+[builderList builderList2]
+modelClass = "Pm\Product\Models\Product"
+scope = "-"
+scopeValue = "{{ id }}"
+displayColumn = "id"
+noRecordsMessage = "No records found"
+detailsPage = "product-single"
+detailsKeyColumn = "slug"
+detailsUrlParameter = "slug"
+pageNumber = "{{ :page }}"
+==
+<?php
+use pm\Product\models\Product;
+use pm\Seller\models\Shopslider;
+use Input;
+
+
+
+public function onGetProduct(){
+  
+   $qr = Product::query()->where('seller_shop_id',Input::get('id'))->get();
+   return $qr;
+   
+}
+public function onGetSlider(){
+  
+    $qr = Shopslider::query()->where('shopid',Input::get('id'))->get();
+   
+    return $qr;
+    
+}
+
+public function onSend(){
+    dd(Input::get('idshop'));
+}
+?>
+==
+{% set record = builderDetails.record %}
+{% set displayColumn = builderDetails.displayColumn %}
+{% set notFoundMessage = builderDetails.notFoundMessage %}
+{% set number = attribute(record, displayColumn) %}
+
+
+<link href="{{ 'assets/login_template/css/style.css'|theme }}" rel="stylesheet">
+<link href="{{ 'assets/banner.css'|theme }}" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+{% put styles %}
+<link href="{{ 'assets/css/productcard.css'|theme }}" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="{{ 'assets/css/home.css'|theme }}" rel="stylesheet">
+<link href="{{ 'assets/css/product.css'|theme }}" rel="stylesheet">
+{% endput %}
+
+
+<div class="view-home-product">
+    <div class="mt-5 text-center">
+        <div>
+            <div id="formContent" style="margin: auto; text-align: center; width: 400px;">
+                <div class="center" style="overflow: hidden;">
+                    <img src='{{ record.image.path }}'
+                        style="border-bottom-left-radius: 100px; max-width: 250px; max-height: 250px;">
+                </div>
+                <div class="mt-5 text-center">
+                    <h4 class="mb-0"><strong>{{ record.shopname }}</strong></h4>
+                    <span class="text-muted d-block mb-2">{{ record.description }}</span>
+                    <a class="btn btn-primary btn-sm">Thông tin shop</a>
+                    <span class="text-muted d-block mb-2">Email: {{ record.email }}</span>
+                    <span class="text-muted d-block mb-2">Address: {{ record.address }}</span>
+                    <span class="text-muted d-block mb-2">Phone: {{ record.phone }}</span>
+                    <div class="d-flex justify-content-between align-items-center mt-4 px-4">
+                        <!-- <div class="stats">
+                            <h6 class="mb-0">Followers</h6>
+                            <span>8,797</span>
+                        </div>
+                        <div class="stats">
+                            <h6 class="mb-0">Projects</h6>
+                            <span>142</span>
+                        </div>
+                        <div class="stats">
+                            <h6 class="mb-0">Ranks</h6>
+                            <span>129</span>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        {% set records = builderList.records %}
+        {% set displayColumn = builderList.displayColumn %}
+        {% set noRecordsMessage = builderList.noRecordsMessage %}
+        {% set detailsPage = builderList.detailsPage %}
+        {% set detailsKeyColumn = builderList.detailsKeyColumn %}
+        {% set detailsUrlParameter = builderList.detailsUrlParameter %}
+
+        <div id="wrapper">
+            <div id="slider-wrap">
+                <ul id="slider">
+                    {% for record in records %}
+                    {% if record.shopid == number %}
+                    <li>
+                        <a href="{{record.url}}"><img src='{{ record.image.path }}'
+                                style="width: 750px; min-height: 500px;" /></a>
+                        <!-- <div>
+                            <h3>{{record.title}} {{record.id}}</h3>
+                        </div> -->
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                <!--controls-->
+                <div class="btns" id="next"><i class="fa fa-arrow-right"></i></div>
+                <div class="btns" id="previous"><i class="fa fa-arrow-left"></i></div>
+                <div id="counter"></div>
+                <div id="pagination-wrap">
+                    <ul>
+                    </ul>
+                </div>
+                <!--controls-->
+            </div>
+        </div>
+
+        {% if records.lastPage > 1 %}
+        <ul class="pagination">
+            {% if records.currentPage > 1 %}
+            <li><a href="{{ this.page.baseFileName|page({ (pageParam): (records.currentPage-1) }) }}">&larr; Prev</a>
+            </li>
+            {% endif %}
+
+            {% for page in 1..records.lastPage %}
+            <li class="{{ records.currentPage == page ? 'active' : null }}">
+                <a href="{{ this.page.baseFileName|page({ (pageParam): page }) }}">{{ page }}</a>
+            </li>
+            {% endfor %}
+
+            {% if records.lastPage > records.currentPage %}
+            <li><a href="{{ this.page.baseFileName|page({ (pageParam): (records.currentPage+1) }) }}">Next &rarr;</a>
+            </li>
+            {% endif %}
+        </ul>
+        {% endif %}
+
+    </div>
+</div>
+<h4 center><strong>DANH SÁCH SẢN PHẨM</strong></h4>
+<div class="view-home-product">
+
+    {% set records = builderList2.records %}
+    {% set displayColumn = builderList2.displayColumn %}
+    {% set noRecordsMessage = builderList2.noRecordsMessage %}
+    {% set detailsPage = builderList2.detailsPage %}
+    {% set detailsKeyColumn = builderList2.detailsKeyColumn %}
+    {% set detailsUrlParameter = builderList2.detailsUrlParameter %}
+
+
+    {% for record in records %}
+    {% if record.active == 1 and record.seller_shop_id == number %}
+    <a href="{{ detailsPage|page({ (detailsUrlParameter): attribute(record, detailsKeyColumn) }) }}" class="card-item">
+        <div class="card-image">
+            <img src="{{record.image.path}}" width="215px" height="230px">
+        </div>
+        <div class="card-title text-muted">
+            {{ html_limit(record.name,25)|raw }}...
+        </div>
+        <div class="card-price">
+            {{ record.make_price }}$ &nbsp;
+            <span class="text-muted">
+                {% if record.sold > 0 %}
+                {{record.sold}} đã bán!
+                {% endif %}
+            </span>
+        </div>
+    </a>
+    {% endif %}
+    {% else %}
+    <li class="no-data">{{ noRecordsMessage }}</li>
+    {% endfor %}
+
+
+
+    {% if records.lastPage > 1 %}
+    <ul class="pagination">
+        {% if records.currentPage > 1 %}
+        <li><a href="{{ this.page.baseFileName|page({ (pageParam): (records.currentPage-1) }) }}">&larr; Prev</a>
+        </li>
+        {% endif %}
+
+        {% for page in 1..records.lastPage %}
+        <li class="{{ records.currentPage == page ? 'active' : null }}">
+            <a href="{{ this.page.baseFileName|page({ (pageParam): page }) }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if records.lastPage > records.currentPage %}
+        <li><a href="{{ this.page.baseFileName|page({ (pageParam): (records.currentPage+1) }) }}">Next &rarr;</a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+</div>
+
+{% put scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script type="text/javascript">
+    setTimeout(()=>{
+        $('.food').remove();
+    },1000);
+    
+    
+</script>
+{% endput %}

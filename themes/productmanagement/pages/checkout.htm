@@ -1,0 +1,513 @@
+title = "checkout"
+url = "/checkout"
+is_hidden = 0
+
+[session]
+security = "all"
+==
+<?php
+use Pm\Product\Models\Checkout;
+use Pm\Product\Models\CheckoutDetails;
+use Auth;
+use Pm\Product\Models\Productoption;
+public function onStart(){
+  
+
+ 
+  $arr=Session::get('message');
+  $this['arr']=json_encode($arr);
+
+  if(Cookie::get($arr[0])){
+      if($arr==null || Cookie::get($arr[0])==null){
+        return Redirect::back();
+      }
+  }else{
+    if($arr==null || Cookie::get($arr)==null){
+        return Redirect::back();
+      }
+  }
+
+  
+  
+
+
+  if(is_array($arr)){
+    $arrcart=[];
+
+    foreach($arr as $value){
+      $cart=Cookie::get($value);
+      array_push($arrcart,json_decode($cart));
+    }
+
+
+    $this['arrcart']=$arrcart;
+    $tong=0;
+    foreach($arrcart as $value){
+      $tong+=$value->total;
+    }
+    $this['tong']=$tong;
+  }else{
+    $arrcart=[];
+    $cart=Cookie::get($arr);
+    array_push($arrcart,json_decode($cart));
+
+    $this['arrcart']=$arrcart;
+    
+    $tong=0;
+    foreach($arrcart as $value){
+      $tong+=$value->total;
+    }
+    $this['tong']=$tong;
+  }
+  
+  
+}
+
+
+public function onCreateCheckout(){
+
+  $user = Auth::getUser(); 
+  
+
+  $us="";
+  if($user){
+    $us=$user->id;
+  }
+
+
+  $arr=Session::get('message');
+
+  if(is_array($arr)){
+    $arrcart=[];
+
+    foreach($arr as $value){
+      $cart=Cookie::get($value);
+      array_push($arrcart,json_decode($cart));
+
+      Cookie::queue($value,null, -1);
+    }
+
+    $ob=new Checkout();
+    $ob->name=Input::get('name');
+    $ob->email=Input::get('email');
+    $ob->address=Input::get('address');
+    $ob->tel=Input::get('tel');
+    $ob->phone=Input::get('phone');
+    $ob->save();
+
+    foreach($arrcart as $value){
+      $details=new CheckoutDetails();
+      $details->id_checkout=$ob->id;
+      $details->quantity=$value->quantity;
+      $details->money=$value->price*$value->quantity;
+      $details->id_product=$value->id;
+      $details->id_seller=$value->seller_shop_id;
+      $details->status='chờ xác nhận';
+      $details->status_payment='chưa thanh toán';
+      $details->product_name=$value->name.$value->size.$value->color;
+      $details->id_user=$us;
+      $details->save();
+
+      $total=Productoption::query()->where('product_name_id',$value->id)->first()->quantity;
+
+      $updateQuantity=$total-$value->quantity;
+      if($updateQuantity<0){
+        $updateQuantity=0;
+      }
+      
+      Productoption::query()->where('product_name_id',$value->id)->update([
+        'quantity' => $updateQuantity
+      ]);
+    }
+  }else{
+    $arrcart=[];
+    $cart=Cookie::get($arr);
+    array_push($arrcart,json_decode($cart));
+
+    Cookie::queue($arr,null, -1);
+
+      $ob=new Checkout();
+      $ob->name=Input::get('name');
+      $ob->email=Input::get('email');
+      $ob->address=Input::get('address');
+      $ob->tel=Input::get('tel');
+      $ob->phone=Input::get('phone');
+      $ob->save();
+
+      foreach($arrcart as $value){
+        $details=new CheckoutDetails();
+        $details->id_checkout=$ob->id;
+        $details->quantity=$value->quantity;
+        $details->money=$value->price*$value->quantity;
+        $details->id_product=$value->id;
+        $details->id_seller=$value->seller_shop_id;
+        $details->status='chờ xác nhận';
+        $details->status_payment='chưa thanh toán';
+        $details->product_name=$value->name.$value->size.$value->color;
+        $details->id_user=$us;
+        $details->save();
+
+
+        $total=Productoption::query()->where('product_name_id',$value->id)->first()->quantity;
+
+        $updateQuantity=$total-$value->quantity;
+        if($updateQuantity<0){
+          $updateQuantity=0;
+        }
+
+        Productoption::query()->where('product_name_id',$value->id)->update([
+          'quantity' => $updateQuantity
+        ]);
+      }
+
+
+  }
+  
+
+}
+?>
+==
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>October CMS - {{ this.page.title }}</title>
+        <meta name="description" content="{{ this.page.meta_description }}">
+        <meta name="title" content="{{ this.page.meta_title }}">
+        <meta name="authora" content="OctoberCMS">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="generator" content="OctoberCMS">
+        <link rel="icon" type="image/png" href="{{ 'assets/images/october.png'|theme }}">
+        <link href="{{ 'assets/css/checkout.css'|theme }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.2/css/intlTelInput.css">
+        <link rel="stylesheet" type="text/css" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css">
+
+        {% styles %}
+    </head>
+    <body>
+    	<!-- Multi step form --> 
+{% component 'session' %}
+
+
+<section class="multi_step_form">  
+  <form id="msform"> 
+    <!-- Tittle -->
+    <div class="tittle">
+     
+    
+      <h2>Checkout Process</h2>
+      <p>In order to use this service, you have to complete this Checkout process</p>
+    </div>
+    <!-- progressbar -->
+    <ul id="progressbar">
+      <li class="active">Information</li>  
+      <li>cart</li> 
+      <li>payment</li>
+    </ul>
+    <!-- fieldsets -->
+    <fieldset>
+      <h3>Setup your information</h3>
+
+      <div class="form-row mb-4"> 
+        <label for="name" class="form-label">Họ tên</label>
+		<input form="msform" type="text" id="name" value="{{user.name}}" name="name" class="form-control">
+   
+		<label for="email" class="form-label">Email</label>
+		<input form="msform" type="email" id="email" value="{{user.email}}" name="email" class="form-control">
+		<label for="address" class="form-label">Địa chỉ</label>
+		<input form="msform" type="text" id="address" name="address" class="form-control">
+		<label for="phone" class="form-label mt-4 mr-1">Số điện thoại</label>
+		<div class="form-row mb-4 mt-4"> 
+			<div class="form-group col-md-6">  
+	          <input form="msform" name="tel" type="tel" id="phone" class="form-control" placeholder="+84" width="80px">
+	        </div>  
+	        <div class="form-group col-md-6"> 
+	          <input form="msform" name="phone" type="number" class="form-control" placeholder="868576334">
+	        </div> 
+    	</div>
+      </div> 
+     
+      <button type="button" class="action-button previous_button">Back</button>
+      <button type="button" id="btn-continute" class="next action-button">Continue</button>  
+    </fieldset>
+
+    <fieldset>
+      <h3>your product</h3>
+      <h6>please checking your products</h6>
+      <table class="table mb-5">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Sản phẩm</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Đơn giá</th>
+            <th scope="col">Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ob in arrcart  %}
+            <tr>
+              <th scope="row"><img src="{{ob.image}}" width="60px" height="60px"></th>
+              <td>{{ob.name}}{{ob.size}}{{ob.color}}</td>
+              <td>{{ob.quantity}}</td>
+              <td>{{ob.price}} <span>$</span></td>
+              <td>{{ob.price*ob.quantity}} <span>$</span></td>
+            </tr>
+          {% endfor %}
+          <tr>
+              <th scope="row"></th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td >Tổng tiền:</td>
+            </tr>
+            <tr>
+              <th scope="row" class="border border-0"></th>
+              <td class="border border-0"></td>
+              <td class="border border-0"></td>
+              <td class="border border-0"></td>
+              <td >{{tong}} <span>$</span></td>
+            </tr>
+
+        </tbody>
+      </table>
+      
+      
+      <button type="button" class="action-button previous previous_button">Back</button>
+      <button type="button" class="next action-button">Continue</button>  
+    </fieldset>  
+    <fieldset>
+      <h3>Select a payment</h3>
+      <h6>Please select a payment method</h6> 
+      <div class="form-group"> 
+        <select class="product_select">
+          <option data-display="Thanh toán trực tiếp">Thanh toán trực tiếp</option> 
+          <option>Thanh toán ngay</option>
+        </select>
+      </div> 
+      <div class="form-group fg_2 dom-payment"> 
+        <div id="paypal-button-container"></div>
+      </div> 
+       
+
+      <button type="button" class="action-button previous previous_button">Back</button> 
+      <a id="liveToastBtn" class="action-button dom-payment2">Finish</a> 
+    
+    </fieldset>  
+  </form>  
+</section> 
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <i class="fa fa-check"></i>
+      <strong class="me-auto">Notification</strong>
+      <small>1 mins ago</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Thanh toàn thành công!!
+      <a href="/cart">Trở lại giỏ hàng</a>
+    </div>
+  </div>
+</div>
+<!-- End Multi step form -->   
+        
+
+        <!-- Scripts -->
+       
+        
+        {% partial 'import_footer' %}
+        {% framework extras %}
+        {% scripts %}
+       
+        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.2/js/intlTelInput.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="{{ 'assets/js/checkout.js'|theme }}"></script>
+        <script src="https://www.paypal.com/sdk/js?client-id=ARtun6JnfxSHa3JZ-1OgFFqiHrReoj0DPeD3SfoMORX5zmkiPcOSeaO6G9ql1Epw27IfalEjq6DBwPNK"></script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+          $('.dom-payment').addClass('hidden')
+          $('.product_select').on('change',function(){
+            if($('.product_select').val()=="Thanh toán ngay"){
+              $('.dom-payment2').addClass('hidden')
+              $('.dom-payment').removeClass('hidden')
+            }else{
+              $('.dom-payment2').removeClass('hidden')
+              $('.dom-payment').addClass('hidden')
+
+            }
+
+          })
+
+
+          const toastTrigger = document.getElementById('liveToastBtn')
+          const toastLiveExample = document.getElementById('liveToast')
+          if (toastTrigger) {
+            toastTrigger.addEventListener('click', () => {
+              const toast = new bootstrap.Toast(toastLiveExample)
+
+              $.request(
+              'onCreateCheckout',
+              {
+                  data: {
+                    name: $('input[name="name"]').val(),
+                    email: $('input[name="email"]').val(),
+                    address: $('input[name="address"]').val(),
+                    tel: $('input[name="tel"]').val(),
+                    phone: $('input[name="phone"]').val(),
+                  },
+                  success: function() {
+                    toast.show();
+                              
+                  }
+              })
+              
+            })
+          }
+
+
+
+          $('#btn-continute').prop("disabled",true);
+          $('#btn-continute').css('cursor', 'not-allowed');
+          $('#btn-continute').css('opacity', '0.5');
+
+          $('input').change(function(event) {
+            var dem=0;
+            Array.from(document.getElementsByTagName('input')).forEach( input => {
+              if(input.value!=""){
+                dem++;
+              }
+            });
+
+            if(dem==5){
+              $('#btn-continute').prop("disabled",false);
+              $('#btn-continute').css('cursor', 'pointer');
+              $('#btn-continute').css('opacity', '1');
+            }else{
+              $('#btn-continute').prop("disabled",true);
+              $('#btn-continute').css('cursor', 'not-allowed');
+              $('#btn-continute').css('opacity', '0.5');
+            }
+          });
+        });
+
+         
+        </script>
+        <script>
+    
+        
+          const paypalButtonsComponent = paypal.Buttons({
+              // optional styling for buttons
+              // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
+              style: {
+                color: "blue",
+                shape: "rect",
+                layout: "vertical"
+              },
+
+              // set up the transaction
+              createOrder: (data, actions) => {
+                  
+                var arr={
+                  arr: "{{arr}}",
+                }
+
+                  return fetch('api/order', {
+                      method: 'post',
+                      headers:{
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(arr)
+                  }).then(function(res) {
+                      return res.json();
+                  }).then(function(orderData) {
+                      return orderData.id;
+                  });
+              },
+
+              // finalize the transaction
+              onApprove: (data, actions) => {
+                  var arr={
+                      arr: "{{arr}}",
+                      name: $('input[name="name"]').val(),
+                      email: $('input[name="email"]').val(),
+                      address: $('input[name="address"]').val(),
+                      tel: $('input[name="tel"]').val(),
+                      phone: $('input[name="phone"]').val(),
+                  }
+
+
+                  return fetch('api/order/' + data.orderID, {
+                    method: 'post',
+                    headers:{
+                        'Content-Type': 'application/json'
+                      },
+                    body: JSON.stringify(arr)
+                }).then(function(res) {
+                    return res.json();
+                }).then(function(orderData) {
+                    // Three cases to handle:
+                    //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                    //   (2) Other non-recoverable errors -> Show a failure message
+                    //   (3) Successful transaction -> Show confirmation or thank you
+
+                    // This example reads a v2/checkout/orders capture response, propagated from the server
+                    // You could use a different API or structure for your 'orderData'
+                    var errorDetail = Array.isArray(orderData.details) && orderData.details[0];
+
+                    if (errorDetail && errorDetail.issue === 'INSTRUMENT_DECLINED') {
+                        return actions.restart(); // Recoverable state, per:
+                        // https://developer.paypal.com/docs/checkout/integration-features/funding-failure/
+                    }
+
+                    if (errorDetail) {
+                        var msg = 'Sorry, your transaction could not be processed.';
+                        if (errorDetail.description) msg += '\n\n' + errorDetail.description;
+                        if (orderData.debug_id) msg += ' (' + orderData.debug_id + ')';
+                        return alert(msg); // Show a failure message (try to avoid alerts in production environments)
+                    }
+
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    const toastTrigger = document.getElementById('liveToastBtn')
+                    const toastLiveExample = document.getElementById('liveToast')
+                    if(toastTrigger){
+                      const toast = new bootstrap.Toast(toastLiveExample)
+                      toast.show();
+                    }
+                    
+                    //var transaction = orderData.purchase_units[0].payments.captures[0];
+                    //alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                    // Replace the above to show a success message within this page, e.g.
+                    // const element = document.getElementById('paypal-button-container');
+                    // element.innerHTML = '';
+                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+              },
+
+              // handle unrecoverable errors
+              onError: (err) => {
+                  console.error('An error prevented the buyer from checking out with PayPal');
+              }
+          });
+
+          paypalButtonsComponent
+              .render("#paypal-button-container")
+              .catch((err) => {
+                  console.error('PayPal Buttons failed to render');
+              });
+        </script>
+    </body>
+</html>

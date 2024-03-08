@@ -1,0 +1,10 @@
+name: User
+form: $/pm/user/models/user/fields.yaml
+modelClass: Pm\User\Models\User
+defaultRedirect: pm/user/user
+create:
+    redirect: 'pm/user/user/update/:id'
+    redirectClose: pm/user/user
+update:
+    redirect: pm/user/user
+    redirectClose: pm/user/user

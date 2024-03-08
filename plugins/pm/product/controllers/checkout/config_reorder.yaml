@@ -1,0 +1,4 @@
+title: Checkout
+modelClass: Pm\Product\Models\Checkout
+toolbar:
+    buttons: reorder_toolbar

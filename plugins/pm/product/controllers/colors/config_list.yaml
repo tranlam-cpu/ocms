@@ -1,0 +1,12 @@
+list: $/pm/product/models/color/columns.yaml
+modelClass: Pm\Product\Models\Color
+title: Colors
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'pm/product/colors/update/:id'

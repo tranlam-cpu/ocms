@@ -1,0 +1,52 @@
+[builderList]
+modelClass = "Pm\Product\Models\Product"
+scope = "-"
+scopeValue = "{{ :scope }}"
+displayColumn = "name"
+noRecordsMessage = "No records found"
+detailsPage = "product-single"
+detailsKeyColumn = "slug"
+detailsUrlParameter = "slug"
+pageNumber = "{{ :page }}"
+==
+{% set records = builderList.records %}
+{% set displayColumn = builderList.displayColumn %}
+{% set noRecordsMessage = builderList.noRecordsMessage %}
+{% set detailsPage = builderList.detailsPage %}
+{% set detailsKeyColumn = builderList.detailsKeyColumn %}
+{% set detailsUrlParameter = builderList.detailsUrlParameter %}
+
+
+<div class="category-details">
+	
+	{% for value in details  %}
+	<h5 class="mt-2"><a href="/category-details/{{value.slug}}">{{ value.name }}</a></h5>
+	<div class="category-tag">
+		{% for rs in tag %}
+		{% if rs.id ==  value.id%}
+			<a href="/tag/{{rs.slug}}">
+				<span class="text-muted">{{ rs.name }}</span>
+			</a>
+		{% endif %}
+		{% endfor %}
+	</div>
+	{% endfor %}
+</div>
+<div class="category-product">
+	<h5 class="mt-2">bạn có thể thích</h5>
+	<div class="category-product-image w-100">
+		{% for pd in product %}
+			{% if pd.id == id %}
+				{% for record in records %}
+					{% if record.id == pd.product_id %}
+					<a href="{{ detailsPage|page({ (detailsUrlParameter): attribute(record, detailsKeyColumn) }) }}">
+						<img src="{{ record.image.path }}" width="100px" height="120px">
+					{% endif %}
+			    {% endfor %}	
+				<div class="text-muted">{{pd.name}}</div>
+			</a>
+			{% endif %}
+		{% endfor %}
+
+	</div>
+</div>

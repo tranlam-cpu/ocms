@@ -1,0 +1,160 @@
+{% set order_details = __SELF__.order_details %}
+{% set orders = __SELF__.orders %}
+{% set products = __SELF__.products %}
+{% set tongtien = 0 %}
+
+<div class="col-lg-7 mx-auto">
+    <h1 class="display-4" style="color: darkgray;"><strong>DANH SÁCH ĐƠN HÀNG</strong></h1>
+</div>
+<ul class="list-group shadow">
+    {% for order in orders %}
+    {{ form_open({request: 'onConfirm'}) }}
+    <form>
+        <li class="list-group-item">
+            <!-- Custom content-->
+            <div class="media flex-column flex-lg-row p-3">
+                <div class="media-body order-2 order-lg-1">
+                    <div>
+                        <h6>THÔNG TIN NGƯỜI MUA</h6>
+                    </div>
+                    <p class="text-muted mb-0">ID ĐƠN HÀNG:
+                        {{ order.id_checkout }} <input id="id" name="id" type="text" value='{{order.id_checkout}}'
+                            hidden />
+                    </p>
+                    <p class="text-muted mb-0">HỌ TÊN:
+                        {{ order.name }}
+                    </P>
+                    <p class="text-muted mb-0">EMAIL:
+                        {{ order.email }}
+                        <input id="email" name="email" type="text" value='{{ order.email }}' hidden />
+                    </p>
+                    <p class="text-muted mb-0">PHONE:
+                        {{ order.phone }}
+                    </p>
+                    <p class="text-muted mb-0">ĐỊA CHỈ GIAO HÀNG:
+                        {{ order.address }}
+                    </p>
+                    <p class="text-muted mb-0">THANH TOÁN:
+                        {{ order.status_payment }}
+                    </p>
+                    <p class="text-muted mb-0">NGÀY ĐẶT HÀNG:
+                        {{ order.created_at }}
+                    </p>
+                    <!-- <div class="d-flex align-items-center justify-content-between mt-1">
+                        <h6 class="font-weight-bold my-2">PRICE:
+                            
+                        </h6>
+                        <h6 class="font-weight-bold my-2">QUANTITY:
+                            
+                        </h6>
+                        <h6>ACTIVE:
+                            
+                        </h6>
+                    </div> -->
+                    <div class="d-flex align-items-center justify-content-between mt-1">
+                        <h6 class="font-weight-bold my-2">TỔNG TIỀN:
+                            {% for details in order_details %}
+                            {% if details.id_checkout == order.id_checkout %}
+                            {% set tongtien = tongtien + details.money %}
+                            {% endif %}
+                            {% endfor %}
+                            {{tongtien}}
+                            {% set tongtien=0 %}
+                        </h6>
+
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mt-1">
+                        <h6 class="font-weight my-2">TRẠNG THÁI:
+                            {{ order.status }}
+                        </h6>
+
+                    </div>
+
+                </div>
+                <div class="media-body order-2 order-lg-1">
+                    <div>
+                        <h6>DANH SÁCH SẢN PHẨM</h6>
+                    </div>
+                    <ul style="list-style: none;">
+                        <div class="d-flex justify-content-between mt-1">
+                            <h6 class="text-muted mb-0">
+                                TÊN
+                            </h6>
+                            <h6 class="text-muted mb-0">
+                                SỐ LƯỢNG
+                            </h6>
+                            <h6 class="text-muted mb-0">
+                                THÀNH TIỀN
+                            </h6>
+
+                        </div>
+
+                        {% for details in order_details %}
+                        {% if order.id_checkout == details.id_checkout %}
+                        <li>
+                            <div class="d-flex justify-content-between mt-1">
+                                <h6 class="font-weight-bold my-2">
+                                    {{ details.product_name }}
+                                </h6>
+                                <h6 class="font-weight-bold my-2">
+                                    {{ details.quantity }}
+                                </h6>
+                                <h6>
+                                    {{ details.money }}
+                                </h6>
+                            </div>
+
+                            <p class="text-muted mb-0">
+
+                            </p>
+                            <div class="d-flex justify-content-between mt-1">
+                                <h6>
+                                    {% for product in products %}
+                                    {% if product.id == details.id_product %}
+                                    <img class="item" style=" max-width: 100px; border-radius: 10px; border: 1px solid;"
+                                        src="{{product.image.path}}">
+                                    {% endif %}
+                                    {% endfor %}
+                                </h6>
+                            </div>
+
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="ml-lg-5 order-1 order-lg-3">
+                    <div class="d-flex justify-content-between mt-1">
+
+                        <ul style="list-style: none;">
+                            <li>
+                                <h6>THAO TÁC</h6>
+                                <br><br><br>
+                                {% if order.status == 'chờ xác nhận' %}
+                                <i>Vui lòng xác nhận giao hàng</i>
+                                <input id="stt" name="stt" type="number" value='0' hidden />
+                                <input class="form-control btn-primary" type="submit" class="fadeIn third"
+                                    value="XÁC NHẬN" />
+                                {% elseif order.status == 'Đang Giao Hàng' %}
+                                <i>Đã xác nhận giao hàng</i>
+                                <input id="stt" name="stt" type="number" value='1' hidden />
+                                <input class="form-control btn-warning" type="submit" class="fadeIn third"
+                                    value="ĐÃ GIAO HÀNG VÀ THANH TOÁN" />
+                                {% else %}
+                                <i>ĐƠN HÀNG ĐÃ THANH TOÁN</i>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- <img src="https://i.imgur.com/KFojDGa.jpg" alt="Generic placeholder image" width="200"
+                class="ml-lg-5 order-1 order-lg-2"> -->
+            </div> <!-- End -->
+        </li>
+    </form>
+    {{ form_close() }}
+    {% endfor %}
+</ul>
+
+{{ orders.render|raw }}

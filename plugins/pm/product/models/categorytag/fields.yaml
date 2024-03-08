@@ -1,0 +1,24 @@
+fields:
+    name:
+        label: Name
+        span: auto
+        type: text
+    slug:
+        label: Slug
+        span: auto
+        preset:
+            field: name
+            type: slug
+        type: text
+    hint:
+        label: 'gợi ý'
+        span: left
+        path: $/pm/product/controllers/categorytags/hint.htm
+        cssClass: text-blue
+        type: hint
+    ParentCategoryDetails:
+        label: 'Category Details'
+        nameFrom: name
+        descriptionFrom: description
+        span: full
+        type: relation

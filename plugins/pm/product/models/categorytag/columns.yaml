@@ -1,0 +1,10 @@
+columns:
+    name:
+        label: 'Tên thẻ'
+        type: text
+        searchable: true
+        sortable: true
+    id:
+        label: 'Thể loại'
+        type: categorydetailsname
+        searchable: true

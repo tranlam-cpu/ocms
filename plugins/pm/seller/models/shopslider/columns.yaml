@@ -1,0 +1,10 @@
+columns:
+    title:
+        label: title
+        type: text
+    url:
+        label: url
+        type: text
+    shopid:
+        label: shopid
+        type: number

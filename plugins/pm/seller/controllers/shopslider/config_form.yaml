@@ -1,0 +1,10 @@
+name: Shopslider
+form: $/pm/seller/models/shopslider/fields.yaml
+modelClass: Pm\seller\Models\Shopslider
+defaultRedirect: pm/seller/shopslider
+create:
+    redirect: 'pm/seller/shopslider/update/:id'
+    redirectClose: pm/seller/shopslider
+update:
+    redirect: pm/seller/shopslider
+    redirectClose: pm/seller/shopslider

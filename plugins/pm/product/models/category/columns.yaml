@@ -1,0 +1,9 @@
+columns:
+    name:
+        label: 'Tên loại'
+        type: text
+        searchable: true
+        sortable: true
+    description:
+        label: 'Mô tả'
+        type: text

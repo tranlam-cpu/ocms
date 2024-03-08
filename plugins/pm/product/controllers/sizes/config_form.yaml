@@ -1,0 +1,10 @@
+name: Sizes
+form: $/pm/product/models/size/fields.yaml
+modelClass: Pm\Product\Models\Size
+defaultRedirect: pm/product/sizes
+create:
+    redirect: 'pm/product/sizes/update/:id'
+    redirectClose: pm/product/sizes
+update:
+    redirect: pm/product/sizes
+    redirectClose: pm/product/sizes
